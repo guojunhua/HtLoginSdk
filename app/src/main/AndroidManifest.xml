@@ -6,27 +6,52 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
+        android:name=".MyApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Transparent">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:screenOrientation="landscape"></activity>
+        <activity
+            android:name=".AccountLoginActivity"
+            android:screenOrientation="landscape"></activity>
+        <activity
+            android:name=".BindActivity"
+            android:screenOrientation="landscape"></activity>
+        <activity
+            android:name=".BindLoginActivity"
+            android:screenOrientation="landscape"></activity>
+        <activity
+            android:name=".ForgetPasswordActivity"
+            android:screenOrientation="landscape"></activity>
+        <activity
+            android:name=".LoginActivity"
+            android:screenOrientation="landscape"></activity>
+        <activity
+            android:name=".SignupActivity"
+            android:screenOrientation="landscape"></activity>
+        <activity
+            android:name=".JudgeActivity"
+            android:screenOrientation="landscape"></activity>
+        <activity
+            android:name=".LoginTypeActivity"
+            android:screenOrientation="landscape"></activity>
+        <activity
+            android:name=".WebActivity"
+            android:screenOrientation="landscape"></activity>
+        <activity
+            android:name=".FirstActivity"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AccountActivity" />
-        <activity android:name=".BindActivity" />
-        <activity android:name=".BindLoginActivity" />
-        <activity android:name=".ForgetPasswordActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".SignupActivity" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -35,6 +60,7 @@
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
+            android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     </application>
 

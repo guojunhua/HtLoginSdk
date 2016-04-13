@@ -10,6 +10,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.mobile.htloginsdk.bean.UserLogin;
+import org.mobile.htloginsdk.utils.HTSdk;
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
+
 /**
  * Created by 郭君华 on 2016/1/18.
  * Email：guojunhua3369@163.com
@@ -24,12 +31,68 @@ public class MyApp extends Application {
     private TextView tv_title;
     private ImageView iv_anim;
     private AnimationDrawable animation;
+    private static volatile MyApp instance;
+    private SharedPreferences sp;
+    private static String appId;
+    public static MyApp getInstance() {
+        if (instance == null) {
+            synchronized (MyApp.class) {
+                if (instance == null) {
+                    instance = new MyApp();
+                }
+            }
+        }
 
+        return instance;
+    }
+    private DbManager.DaoConfig daoConfig;
+    public DbManager.DaoConfig getDaoConfig() {
+        return daoConfig;
+    }
+    private DbManager db;
     public MyApp() {
     }
 
-    public SharedPreferences getSharedPreferences() {
-        return super.getSharedPreferences("login", MODE_PRIVATE);
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        x.Ext.init(this);
+        daoConfig = new DbManager.DaoConfig()
+                .setDbName("HtSdkLogin_db")//创建数据库的名称
+                .setDbVersion(1)//数据库版本号
+                .setDbUpgradeListener(new DbManager.DbUpgradeListener() {
+                    @Override
+                    public void onUpgrade(DbManager db, int oldVersion, int newVersion) {
+                        // TODO: ...
+                        // db.addColumn(...);
+                        // db.dropTable(...);
+                        // ...
+                    }
+                });//数据库更新操作
+        db = x.getDb(daoConfig);
+        sp = HTSdk.getSharedPreferences(this);
+        if (!sp.getString("appId", "").equals("")) {
+            appId = sp.getString("appId", "");
+        }
+    }
+
+    public static String getAppId() {
+        return appId;
+    }
+
+    public void saveData(UserLogin userLogin){
+        if (userLogin!=null){
+            try {
+                db.save(userLogin);
+            } catch (DbException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public RequestParams getRequestParams(String url){
+        RequestParams params = new RequestParams(url);
+        return params;
     }
     public AlertDialog getAlertDialog(Context context){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -39,7 +102,7 @@ public class MyApp extends Application {
         iv_anim.setBackgroundResource(R.drawable.loadanimation);
         animation = ((AnimationDrawable) iv_anim.getBackground());
         builder.setView(view);
-        tv_title.setText(this.getString(R.string.loading));
+        //tv_title.setText(this.getString(R.string.loading));
         return builder.create();
     }
 }

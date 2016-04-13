@@ -20,15 +20,10 @@ import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
-import com.lidroid.xutils.util.LogUtils;
 
 import org.mobile.htloginsdk.MyApp;
 import org.mobile.htloginsdk.R;
+import org.xutils.ex.HttpException;
 
 import java.io.IOException;
 import java.security.PublicKey;
@@ -68,6 +63,11 @@ public class Base64Utils {
 
     public static boolean isEmpty(String email, String password) {
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password))
+            return true;
+        return false;
+    }
+    public static boolean isEmpty(String email, String password,String passwordAgain) {
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)||TextUtils.isEmpty(passwordAgain))
             return true;
         return false;
     }
@@ -223,36 +223,36 @@ public class Base64Utils {
      * @param coo_server 合作伙伴服务器id
      * @param coo_uid  合作伙伴用户UID
      */
-    public static void bindStatistics(final Context context, String type, String version,String coo_server, String coo_uid) {
-        SharedPreferences sp;
-        sp = new MyApp().getSharedPreferences("login", Context.MODE_APPEND);
-        HttpUtils httpUtils = new HttpUtils();
-        String appId = sp.getString("appId", "");
-        String uid = sp.getString("loginUid", "");
-        String channel = sp.getString("channel","");
-        String uuid = new MacAddress(context).getMacAddressAndroid();
-        String brand = MacAddress.getBrand();
-        AdvertisingIdClient.Info adInfo = null;
-        try {
-            adInfo = AdvertisingIdClient.getAdvertisingIdInfo(context);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (GooglePlayServicesNotAvailableException e) {
-            e.printStackTrace();
-        } catch (GooglePlayServicesRepairableException e) {
-            e.printStackTrace();
-        }
-        String idfa = adInfo.getId();
-        String url = String.format(MyApp.bindUrl, appId, type, version, channel, uid, coo_server, coo_uid,uuid,idfa,brand);
-        httpUtils.send(HttpMethod.GET, url, new RequestCallBack<String>() {
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                Toast.makeText(context, "成功了", Toast.LENGTH_SHORT).show();
-            }
-            @Override
-            public void onFailure(HttpException error, String msg) {
-                LogUtils.e("VolleyUtils==" + error.getMessage() + msg);
-            }
-        });
-    }
+//    public static void bindStatistics(final Context context, String type, String version,String coo_server, String coo_uid) {
+//        SharedPreferences sp;
+//        sp = new MyApp().getSharedPreferences("login", Context.MODE_APPEND);
+//        HttpUtils httpUtils = new HttpUtils();
+//        String appId = sp.getString("appId", "");
+//        String uid = sp.getString("loginUid", "");
+//        String channel = sp.getString("channel","");
+//        String uuid = new MacAddress(context).getMacAddressAndroid();
+//        String brand = MacAddress.getBrand();
+//        AdvertisingIdClient.Info adInfo = null;
+//        try {
+//            adInfo = AdvertisingIdClient.getAdvertisingIdInfo(context);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (GooglePlayServicesNotAvailableException e) {
+//            e.printStackTrace();
+//        } catch (GooglePlayServicesRepairableException e) {
+//            e.printStackTrace();
+//        }
+//        String idfa = adInfo.getId();
+//        String url = String.format(MyApp.bindUrl, appId, type, version, channel, uid, coo_server, coo_uid,uuid,idfa,brand);
+//        httpUtils.send(HttpMethod.GET, url, new RequestCallBack<String>() {
+//            @Override
+//            public void onSuccess(ResponseInfo<String> responseInfo) {
+//                Toast.makeText(context, "成功了", Toast.LENGTH_SHORT).show();
+//            }
+//            @Override
+//            public void onFailure(HttpException error, String msg) {
+//                LogUtils.e("VolleyUtils==" + error.getMessage() + msg);
+//            }
+//        });
+//    }
 }

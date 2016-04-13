@@ -1,4 +1,4 @@
-package org.mobile.htloginsdk;
+package org.mobile.htloginsdk.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -24,6 +24,6 @@ public final class HTSdk {
         }
     }
     public static SharedPreferences getSharedPreferences(Context context) {
-        return context.getSharedPreferences("login", context.MODE_PRIVATE);
+        return context.getSharedPreferences("loginId", context.MODE_PRIVATE);
     }
 }

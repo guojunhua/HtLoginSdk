@@ -1,9 +1,9 @@
-package org.mobile.htloginsdk;
+package org.mobile.htloginsdk.utils;
 
 import android.util.Log;
-import com.lidroid.xutils.exception.HttpException;
 
 import org.mobile.htloginsdk.bean.LoginBean;
+import org.xutils.ex.HttpException;
 
 /**
  * Created by 郭君华 on 2016/3/4.

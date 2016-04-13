@@ -3,26 +3,36 @@ package org.mobile.htloginsdk;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.facebook.ProfileTracker;
+import android.widget.Toast;
 
+import com.facebook.ProfileTracker;
+import com.google.gson.Gson;
+
+import org.mobile.htloginsdk.bean.LoginBean;
 import org.mobile.htloginsdk.bean.User;
 import org.mobile.htloginsdk.utils.Base64Utils;
+import org.mobile.htloginsdk.utils.HTSdk;
+import org.mobile.htloginsdk.utils.HtLoginManager;
 import org.mobile.htloginsdk.utils.LogInStateListener;
 import org.mobile.htloginsdk.utils.LoginManager;
 import org.mobile.htloginsdk.utils.MacAddress;
+import org.xutils.common.Callback;
+import org.xutils.ex.HttpException;
+import org.xutils.x;
 
 import java.io.Serializable;
 
 public class MainActivity extends Activity implements View.OnClickListener, LogInStateListener {
-    private String appId;
-    private String apiType;
+    private SharedPreferences.Editor edit;
     private String data;
     private String diviceId;
     private String brand;
@@ -35,98 +45,141 @@ public class MainActivity extends Activity implements View.OnClickListener, LogI
     private AnimationDrawable animation;
     private AlertDialog dialog;
     public Button btn_signup;
-    public Button face;
+    public Button btn_facebook;
+    private SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         initView();
         login();
     }
 
     private void initView() {
-        btn_tourist = ((Button) findViewById(R.id.tourist));
-        btn_account = ((Button) findViewById(R.id.account));
-        btn_signup = ((Button) findViewById(R.id.signup));
-        face = ((Button) findViewById(R.id.facebook1));
+        btn_tourist = ((Button) findViewById(R.id.login_tourist));
+        btn_account = ((Button) findViewById(R.id.login_account));
+        btn_signup = ((Button) findViewById(R.id.login_signup));
+        btn_facebook = ((Button) findViewById(R.id.login_facebook));
         btn_signup.setOnClickListener(this);
         btn_tourist.setOnClickListener(this);
         btn_account.setOnClickListener(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View view = getLayoutInflater().inflate(R.layout.alert_layout, null);
-        tv_title = ((TextView) view.findViewById(R.id.alert_tv));
-        iv_anim = ((ImageView) view.findViewById(R.id.alert_iv));
-        iv_anim.setBackgroundResource(R.drawable.loadanimation);
-        animation = ((AnimationDrawable) iv_anim.getBackground());
-        builder.setView(view);
-        tv_title.setText(this.getString(R.string.loading));
-        dialog = builder.create();
+        sp = getSharedPreferences("login", MODE_PRIVATE);
+        edit = sp.edit();
     }
 
     @Override
     public void onClick(View v) {
         int btnId = v.getId();
-        if (btnId == R.id.tourist) {
-            action1();
-        } else if (btnId == R.id.account) {
-            action2();
-        } else if (btnId == R.id.signup) {
-            action3();
+        if (btnId == R.id.login_tourist) {
+            toutistLogin();
+        } else if (btnId == R.id.login_account) {
+            accountLogin();
+        } else if (btnId == R.id.login_signup) {
+            accountSignup();
         }
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        profileTracker.stopTracking();
+        // profileTracker.stopTracking();
         //LoginManager.getInstance().logOut();
         LoginManager.OnDestory();
     }
 
-    public void action1() {
-        animation.start();
-        dialog.show();
+    public void toutistLogin() {
         diviceId = new MacAddress(this).getMacAddressAndroid();
         brand = MacAddress.getBrand();
         Log.e("---divice---", "" + diviceId + "--------------" + brand);
         String userInfo = "username=" + diviceId + "#device&name=" + brand + "&uuid=" + diviceId;
         data = Base64Utils.backData(userInfo);
-        String url = String.format(MyApp.url, apiType, appId, data);
+        String url = String.format(MyApp.url, "login", MyApp.getAppId(), data);
+        requestJsonData(url);
     }
 
-    public void action2() {
-        Intent accountIntent = new Intent(MainActivity.this, LoginActivity.class);
-        startActivity(accountIntent);
+    public void accountLogin() {
+        startActivity(new Intent(MainActivity.this, LoginActivity.class));
     }
-    private void action3() {
-        Intent signupIntent = new Intent(MainActivity.this, SignupActivity.class);
-        startActivity(signupIntent);
+
+    private void accountSignup() {
+        startActivity(new Intent(MainActivity.this, SignupActivity.class));
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
         LoginManager.onActivityResult(requestCode, resultCode, data);
     }
-    @Override
-    public void OnLoginSuccess(User user,String logType) {
-//        Intent intent=new Intent(MainActivity.this,Result.class);
-//        intent.putExtra("user",(Serializable)user);
-//        intent.putExtra("logtype", logType);
-//        startActivity(intent);
 
+    @Override
+    public void OnLoginSuccess(User user, String logType) {
+        id = user.getUserId();
+        name = user.getUserName();
+        String userInfo = "username=" + id + "#facebook&name=" + name + "&uuid=" + new MacAddress(this).getMacAddressAndroid();
+        data = Base64Utils.backData(userInfo);
+        String url = String.format(MyApp.url, "login", MyApp.getAppId(), data);
+        requestJsonData(url);
     }
+
     @Override
     public void OnLoginError(String error) {
         System.out.println(error);
     }
-    private void login(){
+
+    private void login() {
         LoginManager.initialize(MainActivity.this);
-        LoginManager.setFaceBookLoginParams(MainActivity.this, face, null, this);
+        LoginManager.setFaceBookLoginParams(MainActivity.this, btn_facebook, null, this);
+    }
+    public void requestJsonData(String url) {
+        final HtLoginManager htLoginManager = HtLoginManager.getInstance();
+        x.http().get(MyApp.getInstance().getRequestParams(url), new Callback.CommonCallback<String>() {
+            private LoginBean loginBean;
+
+            @Override
+            public void onSuccess(String result) {
+                loginBean = new Gson().fromJson(result, LoginBean.class);
+                htLoginManager.setLoginBean(loginBean);
+                if (loginBean != null) {
+                    if (loginBean.getCode() == 0) {
+                        Toast.makeText(MainActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else if (loginBean.getCode() == 1) {
+                        //Toast.makeText(MainActivity.this, R.string.error_operation, Toast.LENGTH_SHORT).show();
+
+                    } else if (loginBean.getCode() == 40100) {
+                        //Toast.makeText(MainActivity.this, R.string.error_RSA, Toast.LENGTH_SHORT).show();
+
+                    } else if (loginBean.getCode() == 40101) {
+                        //Toast.makeText(MainActivity.this, R.string.error_parametr, Toast.LENGTH_SHORT).show();
+
+                    } else if (loginBean.getCode() == 40102) {
+                        //Toast.makeText(MainActivity.this, R.string.error_token, Toast.LENGTH_SHORT).show();
+
+                    } else if (loginBean.getCode() == 40103) {
+                        //Toast.makeText(MainActivity.this, R.string.over_time, Toast.LENGTH_SHORT).show();
+
+                    } else if (loginBean.getCode() == 40105) {
+                        //Toast.makeText(MainActivity.this, R.string.login_field_tip, Toast.LENGTH_SHORT).show();
+
+                    } else if (loginBean.getCode() == 40106) {
+                        //Toast.makeText(MainActivity.this, R.string.user_exist_tip, Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+            }
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+//                loginManager.setException(error);
+//                loginManager.setMsg(msg);
+            }
+            @Override
+            public void onCancelled(Callback.CancelledException cex) {
+            }
+            @Override
+            public void onFinished() {
+            }
+        });
     }
 }
