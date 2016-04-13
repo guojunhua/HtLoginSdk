@@ -1,4 +1,4 @@
-package org.mobile.htloginsdk;
+package org.mobile.htloginsdk.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+
+import org.mobile.htloginsdk.R;
 
 /**
  * Created by 郭君华 on 2016/4/5.

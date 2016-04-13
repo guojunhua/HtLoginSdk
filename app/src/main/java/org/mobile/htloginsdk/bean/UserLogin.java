@@ -12,26 +12,31 @@ import org.xutils.db.annotation.Table;
 public class UserLogin {
     @Column(name = "id", isId = true)
     private int id;
+    //设备id，邮箱，FacebookID
     @Column(name = "username")
     private String username;
+    //设备名称，账号密码，Facebook名称
     @Column(name = "password")
     private String password;
+    //登录状态设备为1，Facebook登录为3,邮箱登录为2
     @Column(name = "loginStats")
     private int loginStats;
+    //绑定状态未绑定为1绑定为2
     @Column(name = "isBind")
     private int isBind;
-    @Column(name = "diviceId")
-    private String diviceId;
-    @Column(name = "brand")
-    private String brand;
-    @Column(name = "facebookId")
-    private String facebookId;
-    @Column(name = "facebookName")
-    private String facebookName;
+    //登录返回的token
     @Column(name = "token")
     private String token;
+    //登录返回的uid
     @Column(name = "uid")
     private String uid;
+    //登录返回的name
+    @Column(name = "name")
+    private String name;
+    @Column(name = "email")
+    private String email;
+    @Column(name = "emailPassword")
+    private String emailPassword;
 
     public int getId() {
         return id;
@@ -73,38 +78,6 @@ public class UserLogin {
         this.isBind = isBind;
     }
 
-    public String getDiviceId() {
-        return diviceId;
-    }
-
-    public void setDiviceId(String diviceId) {
-        this.diviceId = diviceId;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public String getFacebookId() {
-        return facebookId;
-    }
-
-    public void setFacebookId(String facebookId) {
-        this.facebookId = facebookId;
-    }
-
-    public String getFacebookName() {
-        return facebookName;
-    }
-
-    public void setFacebookName(String facebookName) {
-        this.facebookName = facebookName;
-    }
-
     public String getToken() {
         return token;
     }
@@ -119,5 +92,45 @@ public class UserLogin {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmailPassword() {
+        return emailPassword;
+    }
+
+    public void setEmailPassword(String emailPassword) {
+        this.emailPassword = emailPassword;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "UserLogin{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", loginStats=" + loginStats +
+                ", isBind=" + isBind +
+                ", token='" + token + '\'' +
+                ", uid='" + uid + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", emailPassword='" + emailPassword + '\'' +
+                '}';
     }
 }

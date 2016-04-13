@@ -1,4 +1,4 @@
-package org.mobile.htloginsdk;
+package org.mobile.htloginsdk.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import org.mobile.htloginsdk.MyApp;
+import org.mobile.htloginsdk.R;
 import org.mobile.htloginsdk.bean.LoginBean;
 import org.mobile.htloginsdk.utils.Base64Utils;
 import org.mobile.htloginsdk.utils.HtLoginManager;
@@ -76,9 +78,9 @@ public class BindActivity extends Activity implements View.OnClickListener{
                String userInfo = "username=" + username + "&password=" + password;
                Log.e("--hvd--", " " + userInfo);
                data = Base64Utils.backData(userInfo);
-               String url = String.format(MyApp.url, "register", MyApp.getAppId(), data);
-               Log.e("---url--", " " + url);
-               requestJsonData(url);
+               //String url = String.format(MyApp.url, "register", MyApp.getAppId(), data);
+//               Log.e("---url--", " " + url);
+//               requestJsonData(url);
            }
        }
     }

@@ -1,4 +1,4 @@
-package org.mobile.htloginsdk;
+package org.mobile.htloginsdk.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 
+import org.mobile.htloginsdk.R;
 import org.mobile.htloginsdk.utils.HTSdk;
 
 /**
@@ -16,8 +17,8 @@ public class FirstActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        HTSdk.sdkInitialize(this, "100000", "asdf");
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        HTSdk.sdkInitialize(this,"100000","");
         setContentView(R.layout.activity_first);
     }
     public void onClick(View v){

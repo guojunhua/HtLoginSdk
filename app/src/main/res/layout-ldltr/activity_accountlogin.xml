@@ -46,7 +46,7 @@
                     android:layout_height="30dp"
                     android:layout_marginRight="5dip"
                     android:layout_weight="1"
-                    android:src="@drawable/more" />
+                    android:src="@drawable/more1" />
             </LinearLayout>
 
             <Button

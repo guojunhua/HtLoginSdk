@@ -1,14 +1,17 @@
-package org.mobile.htloginsdk;
+package org.mobile.htloginsdk.activity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
+import org.mobile.htloginsdk.MyApp;
 import org.mobile.htloginsdk.bean.UserLogin;
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
 import org.xutils.x;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -17,13 +20,13 @@ import java.util.List;
  */
 public class JudgeActivity extends Activity {
     public DbManager db;
-    public List<UserLogin> data;
+    private List<UserLogin> data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        db = x.getDb(((MyApp) getApplicationContext()).getDaoConfig());
         try {
+            db = x.getDb(((MyApp) getApplicationContext()).getDaoConfig());
             data = db.selector(UserLogin.class).findAll();
             if (data!=null){
                 startActivity(new Intent(JudgeActivity.this,LoginTypeActivity.class));
@@ -33,6 +36,15 @@ public class JudgeActivity extends Activity {
                 finish();
             }
         } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            db.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

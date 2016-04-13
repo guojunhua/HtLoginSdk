@@ -5,17 +5,23 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.mobile.htloginsdk.bean.LoginBean;
 import org.mobile.htloginsdk.bean.UserLogin;
 import org.mobile.htloginsdk.utils.HTSdk;
 import org.xutils.DbManager;
+import org.xutils.db.table.TableEntity;
 import org.xutils.ex.DbException;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
+
+import java.util.List;
 
 /**
  * Created by 郭君华 on 2016/1/18.
@@ -32,8 +38,8 @@ public class MyApp extends Application {
     private ImageView iv_anim;
     private AnimationDrawable animation;
     private static volatile MyApp instance;
-    private SharedPreferences sp;
-    private static String appId;
+    private List<UserLogin> user;
+
     public static MyApp getInstance() {
         if (instance == null) {
             synchronized (MyApp.class) {
@@ -45,11 +51,15 @@ public class MyApp extends Application {
 
         return instance;
     }
+
     private DbManager.DaoConfig daoConfig;
+
     public DbManager.DaoConfig getDaoConfig() {
         return daoConfig;
     }
+
     private DbManager db;
+
     public MyApp() {
     }
 
@@ -57,44 +67,63 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
         x.Ext.init(this);
+        // 设置是否输出debug
+        x.Ext.setDebug(true);
         daoConfig = new DbManager.DaoConfig()
                 .setDbName("HtSdkLogin_db")//创建数据库的名称
-                .setDbVersion(1)//数据库版本号
-                .setDbUpgradeListener(new DbManager.DbUpgradeListener() {
-                    @Override
-                    public void onUpgrade(DbManager db, int oldVersion, int newVersion) {
-                        // TODO: ...
-                        // db.addColumn(...);
-                        // db.dropTable(...);
-                        // ...
-                    }
-                });//数据库更新操作
+                .setDbVersion(1);//数据库版本号
+    }
+
+    public void saveData(String username, String password, int stats, int isBind, LoginBean loginBean) {
         db = x.getDb(daoConfig);
-        sp = HTSdk.getSharedPreferences(this);
-        if (!sp.getString("appId", "").equals("")) {
-            appId = sp.getString("appId", "");
-        }
-    }
-
-    public static String getAppId() {
-        return appId;
-    }
-
-    public void saveData(UserLogin userLogin){
-        if (userLogin!=null){
+        if (loginBean != null) {
+            UserLogin userLogin = new UserLogin();
+            userLogin.setUsername(username);
+            userLogin.setPassword(password);
+            userLogin.setLoginStats(stats);
+            userLogin.setIsBind(isBind);
+            userLogin.setName(loginBean.getData().getName());
+            userLogin.setToken(loginBean.getData().getToken());
+            userLogin.setUid(loginBean.getData().getUid());
             try {
-                db.save(userLogin);
+//                if (findData(userLogin)) {
+                    db.save(userLogin);
+                    Log.e("---save", "保存成功");
+//                }
             } catch (DbException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public RequestParams getRequestParams(String url){
+    public boolean findData(UserLogin userLogin) {
+        boolean falg = true;
+        UserLogin userLogin1 = null;
+        try {
+            if (db.selector(UserLogin.class).findAll() != null) {
+                user = db.selector(UserLogin.class).findAll();
+                for (int i = 0; i < user.size(); i++) {
+                    if (user.get(i).getUsername().equals(userLogin.getUsername())) {
+                        falg = false;
+                    } else {
+                        falg = true;
+                    }
+                }
+            } else {
+                return true;
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        return falg;
+    }
+
+    public RequestParams getRequestParams(String url) {
         RequestParams params = new RequestParams(url);
         return params;
     }
-    public AlertDialog getAlertDialog(Context context){
+
+    public AlertDialog getAlertDialog(Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = LayoutInflater.from(context).inflate(R.layout.alert_layout, null);
         tv_title = ((TextView) view.findViewById(R.id.alert_tv));

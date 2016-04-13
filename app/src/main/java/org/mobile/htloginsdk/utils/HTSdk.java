@@ -24,6 +24,6 @@ public final class HTSdk {
         }
     }
     public static SharedPreferences getSharedPreferences(Context context) {
-        return context.getSharedPreferences("loginId", context.MODE_PRIVATE);
+        return context.getSharedPreferences("login", context.MODE_PRIVATE);
     }
 }

@@ -100,7 +100,7 @@ public class FaceBookLoginUtil{
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
     public void OnDestory(){
-        //profileTracker.stopTracking();
+        LoginManager.getInstance().logOut();
     }
 
     private class FaceBookCallBackListener implements FacebookCallback<LoginResult>{

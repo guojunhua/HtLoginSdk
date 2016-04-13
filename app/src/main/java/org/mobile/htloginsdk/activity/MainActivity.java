@@ -1,52 +1,41 @@
-package org.mobile.htloginsdk;
+package org.mobile.htloginsdk.activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.ProfileTracker;
 import com.google.gson.Gson;
 
+import org.mobile.htloginsdk.MyApp;
+import org.mobile.htloginsdk.R;
 import org.mobile.htloginsdk.bean.LoginBean;
 import org.mobile.htloginsdk.bean.User;
 import org.mobile.htloginsdk.utils.Base64Utils;
-import org.mobile.htloginsdk.utils.HTSdk;
 import org.mobile.htloginsdk.utils.HtLoginManager;
 import org.mobile.htloginsdk.utils.LogInStateListener;
 import org.mobile.htloginsdk.utils.LoginManager;
 import org.mobile.htloginsdk.utils.MacAddress;
 import org.xutils.common.Callback;
-import org.xutils.ex.HttpException;
 import org.xutils.x;
 
-import java.io.Serializable;
-
 public class MainActivity extends Activity implements View.OnClickListener, LogInStateListener {
-    private SharedPreferences.Editor edit;
-    private String data;
     private String diviceId;
     private String brand;
     private Button btn_tourist, btn_account;
-    public ProfileTracker profileTracker;
     public String name;
     public String id;
-    private TextView tv_title;
-    private ImageView iv_anim;
-    private AnimationDrawable animation;
-    private AlertDialog dialog;
     public Button btn_signup;
     public Button btn_facebook;
     private SharedPreferences sp;
+    private String appId;
+    private SharedPreferences.Editor edit;
+    private String data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +55,9 @@ public class MainActivity extends Activity implements View.OnClickListener, LogI
         btn_tourist.setOnClickListener(this);
         btn_account.setOnClickListener(this);
         sp = getSharedPreferences("login", MODE_PRIVATE);
+        if (!sp.getString("appId", "").equals("")) {
+            appId = sp.getString("appId", "");
+        }
         edit = sp.edit();
     }
 
@@ -84,8 +76,6 @@ public class MainActivity extends Activity implements View.OnClickListener, LogI
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // profileTracker.stopTracking();
-        //LoginManager.getInstance().logOut();
         LoginManager.OnDestory();
     }
 
@@ -95,8 +85,9 @@ public class MainActivity extends Activity implements View.OnClickListener, LogI
         Log.e("---divice---", "" + diviceId + "--------------" + brand);
         String userInfo = "username=" + diviceId + "#device&name=" + brand + "&uuid=" + diviceId;
         data = Base64Utils.backData(userInfo);
-        String url = String.format(MyApp.url, "login", MyApp.getAppId(), data);
-        requestJsonData(url);
+        String url = String.format(MyApp.url, "login", "100000", data);
+        Log.e("---url",appId+"  "+url);
+        requestJsonData(url, diviceId, brand, 1);
     }
 
     public void accountLogin() {
@@ -119,8 +110,8 @@ public class MainActivity extends Activity implements View.OnClickListener, LogI
         name = user.getUserName();
         String userInfo = "username=" + id + "#facebook&name=" + name + "&uuid=" + new MacAddress(this).getMacAddressAndroid();
         data = Base64Utils.backData(userInfo);
-        String url = String.format(MyApp.url, "login", MyApp.getAppId(), data);
-        requestJsonData(url);
+        String url = String.format(MyApp.url, "login", appId, data);
+        requestJsonData(url, id, name, 3);
     }
 
     @Override
@@ -132,7 +123,7 @@ public class MainActivity extends Activity implements View.OnClickListener, LogI
         LoginManager.initialize(MainActivity.this);
         LoginManager.setFaceBookLoginParams(MainActivity.this, btn_facebook, null, this);
     }
-    public void requestJsonData(String url) {
+    public void requestJsonData(String url, final String username, final String password, final int stats) {
         final HtLoginManager htLoginManager = HtLoginManager.getInstance();
         x.http().get(MyApp.getInstance().getRequestParams(url), new Callback.CommonCallback<String>() {
             private LoginBean loginBean;
@@ -143,6 +134,11 @@ public class MainActivity extends Activity implements View.OnClickListener, LogI
                 htLoginManager.setLoginBean(loginBean);
                 if (loginBean != null) {
                     if (loginBean.getCode() == 0) {
+                        MyApp.getInstance().saveData(username, password, stats,1, loginBean);
+                        edit.putString("username", username);
+                        edit.putInt("loginStats", stats);
+                        edit.putBoolean("bindStats",false);
+                        edit.apply();
                         Toast.makeText(MainActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
                         finish();
                     } else if (loginBean.getCode() == 1) {
@@ -169,14 +165,17 @@ public class MainActivity extends Activity implements View.OnClickListener, LogI
                     }
                 }
             }
+
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
 //                loginManager.setException(error);
 //                loginManager.setMsg(msg);
             }
+
             @Override
             public void onCancelled(Callback.CancelledException cex) {
             }
+
             @Override
             public void onFinished() {
             }
