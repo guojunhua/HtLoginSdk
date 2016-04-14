@@ -112,6 +112,7 @@
                     android:id="@+id/login_check"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:checked="true"
                     android:button="@drawable/checkbox"
                     android:layout_centerVertical="true"/>
 

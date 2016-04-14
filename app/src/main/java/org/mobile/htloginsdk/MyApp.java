@@ -58,24 +58,23 @@ public class MyApp extends Application {
         return daoConfig;
     }
 
-    private DbManager db;
-
-    public MyApp() {
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
         x.Ext.init(this);
         // 设置是否输出debug
-        x.Ext.setDebug(true);
+//        x.Ext.setDebug(true);
         daoConfig = new DbManager.DaoConfig()
                 .setDbName("HtSdkLogin_db")//创建数据库的名称
-                .setDbVersion(1);//数据库版本号
+                .setDbVersion(1)//数据库版本号
+                .setDbUpgradeListener(new DbManager.DbUpgradeListener() {
+                    @Override
+                    public void onUpgrade(DbManager db, int oldVersion, int newVersion) {
+                    }
+                });//数据库更新操作
     }
 
-    public void saveData(String username, String password, int stats, int isBind, LoginBean loginBean) {
-        db = x.getDb(daoConfig);
+    public void saveData(String username, String password, int stats, int isBind, LoginBean loginBean,DbManager db) {
         if (loginBean != null) {
             UserLogin userLogin = new UserLogin();
             userLogin.setUsername(username);
@@ -86,17 +85,17 @@ public class MyApp extends Application {
             userLogin.setToken(loginBean.getData().getToken());
             userLogin.setUid(loginBean.getData().getUid());
             try {
-//                if (findData(userLogin)) {
+               if (findData(userLogin,db)) {
                     db.save(userLogin);
                     Log.e("---save", "保存成功");
-//                }
+               }
             } catch (DbException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public boolean findData(UserLogin userLogin) {
+    public boolean findData(UserLogin userLogin,DbManager db) {
         boolean falg = true;
         UserLogin userLogin1 = null;
         try {

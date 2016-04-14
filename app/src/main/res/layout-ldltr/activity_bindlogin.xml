@@ -17,6 +17,7 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/bindlogin_linear"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginLeft="30dp"
@@ -49,7 +50,7 @@
                     android:layout_height="30dp"
                     android:layout_marginRight="5dip"
                     android:layout_weight="1"
-                    android:src="@drawable/more1" />
+                    android:src="@drawable/more" />
             </LinearLayout>
 
 

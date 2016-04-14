@@ -26,7 +26,7 @@
         android:layout_weight="1"
         android:text="asdfsadfasdf"
         android:layout_marginLeft="10dp"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:textSize="20sp"
         android:textColor="@color/black" />
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Window;
 
 import org.mobile.htloginsdk.MyApp;
 import org.mobile.htloginsdk.bean.UserLogin;
@@ -12,6 +13,7 @@ import org.xutils.ex.DbException;
 import org.xutils.x;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,26 +27,23 @@ public class JudgeActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        init();
+        if (data==null) {
+            startActivity(new Intent(JudgeActivity.this, MainActivity.class));
+            finish();
+        } else {
+            startActivity(new Intent(JudgeActivity.this, LoginTypeActivity.class));
+            finish();
+        }
+
+    }
+
+    public void init() {
         try {
             db = x.getDb(((MyApp) getApplicationContext()).getDaoConfig());
             data = db.selector(UserLogin.class).findAll();
-            if (data!=null){
-                startActivity(new Intent(JudgeActivity.this,LoginTypeActivity.class));
-                finish();
-            }else {
-                startActivity(new Intent(JudgeActivity.this,MainActivity.class));
-                finish();
-            }
         } catch (DbException e) {
-            e.printStackTrace();
-        }
-    }
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        try {
-            db.close();
-        } catch (IOException e) {
             e.printStackTrace();
         }
     }

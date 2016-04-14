@@ -132,6 +132,7 @@
                     android:id="@+id/signup_check"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:checked="true"
                     android:button="@drawable/checkbox"/>
 
                 <TextView

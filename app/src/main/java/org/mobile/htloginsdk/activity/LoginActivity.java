@@ -2,6 +2,7 @@ package org.mobile.htloginsdk.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -10,6 +11,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -27,6 +29,7 @@ import org.mobile.htloginsdk.bean.LoginBean;
 import org.mobile.htloginsdk.utils.Base64Utils;
 import org.mobile.htloginsdk.utils.HtLoginManager;
 import org.mobile.htloginsdk.utils.MacAddress;
+import org.xutils.DbManager;
 import org.xutils.common.Callback;
 import org.xutils.x;
 
@@ -44,6 +47,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private String username;
     private String password;
     private String data;
+    private SharedPreferences sp;
+    private String appId;
+    private SharedPreferences.Editor edit;
     private TextView login_agreement;
 
     @Override
@@ -69,6 +75,12 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         login.setOnClickListener(this);
         login_back.setOnClickListener(this);
         forgetPassword.setOnClickListener(this);
+        sp = getSharedPreferences("login", MODE_PRIVATE);
+        if (!sp.getString("appId", "").equals("")) {
+            appId = sp.getString("appId", "");
+        }
+        edit = sp.edit();
+        edit_account.setFocusable(true);
     }
 
     @Override
@@ -94,9 +106,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             } else {
                 String userInfo = "username=" + username + "&password=" + password + "&uuid=" + new MacAddress(this).getMacAddressAndroid();
                 data = Base64Utils.backData(userInfo);
-//                String url = String.format(MyApp.url, "login", MyApp.getAppId(), data) + "&format=json";
-//                Log.e("---gege---", " " + userInfo + "----" + url);
-//                requestJsonData(url);
+                String url = String.format(MyApp.url, "login", appId, data) + "&format=json";
+                Log.e("---gege---", " " + userInfo + "----" + url);
+                requestJsonData(url);
             }
         } else if (v.getId() == R.id.forgetpassword) {
             startActivity(new Intent(LoginActivity.this, ForgetPasswordActivity.class));
@@ -114,6 +126,12 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 htLoginManager.setLoginBean(loginBean);
                 if (loginBean != null) {
                     if (loginBean.getCode() == 0) {
+                        DbManager db = x.getDb(((MyApp) getApplicationContext()).getDaoConfig());
+                        MyApp.getInstance().saveData(username, password, 2,2, loginBean,db);
+                        edit.putString("username", username);
+                        edit.putInt("loginStats", 2);
+                        edit.putBoolean("bindStats",false);
+                        edit.apply();
                         Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
                         finish();
                     } else if (loginBean.getCode() == 1) {

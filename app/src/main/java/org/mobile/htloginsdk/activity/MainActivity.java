@@ -21,6 +21,7 @@ import org.mobile.htloginsdk.utils.HtLoginManager;
 import org.mobile.htloginsdk.utils.LogInStateListener;
 import org.mobile.htloginsdk.utils.LoginManager;
 import org.mobile.htloginsdk.utils.MacAddress;
+import org.xutils.DbManager;
 import org.xutils.common.Callback;
 import org.xutils.x;
 
@@ -134,7 +135,8 @@ public class MainActivity extends Activity implements View.OnClickListener, LogI
                 htLoginManager.setLoginBean(loginBean);
                 if (loginBean != null) {
                     if (loginBean.getCode() == 0) {
-                        MyApp.getInstance().saveData(username, password, stats,1, loginBean);
+                        DbManager db = x.getDb(((MyApp) getApplicationContext()).getDaoConfig());
+                        MyApp.getInstance().saveData(username, password, stats,1, loginBean,db);
                         edit.putString("username", username);
                         edit.putInt("loginStats", stats);
                         edit.putBoolean("bindStats",false);
