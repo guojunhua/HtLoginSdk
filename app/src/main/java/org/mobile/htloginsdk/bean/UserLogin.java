@@ -10,10 +10,10 @@ import org.xutils.db.annotation.Table;
  */
 @Table(name = "login")
 public class UserLogin {
-    @Column(name = "id", isId = true)
+    @Column(name = "id")
     private int id;
-    //设备id，邮箱，FacebookID
-    @Column(name = "username")
+    //设备id，邮箱，FacebookID username 为主键
+    @Column(name = "username",isId = true)
     private String username;
     //设备名称，账号密码，Facebook名称
     @Column(name = "password")
@@ -37,6 +37,21 @@ public class UserLogin {
     private String email;
     @Column(name = "emailPassword")
     private String emailPassword;
+
+    public UserLogin(String username, String password, int loginStats, int isBind, String uid, String token, String name, String email, String emailPassword) {
+        this.username = username;
+        this.password = password;
+        this.loginStats = loginStats;
+        this.isBind = isBind;
+        this.uid = uid;
+        this.token = token;
+        this.name = name;
+        this.email = email;
+        this.emailPassword = emailPassword;
+    }
+
+    public UserLogin() {
+    }
 
     public int getId() {
         return id;

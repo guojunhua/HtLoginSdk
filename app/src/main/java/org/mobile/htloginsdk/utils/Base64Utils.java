@@ -89,10 +89,6 @@ public class Base64Utils {
         return matcher.matches();
     }
 
-    public static boolean isContains(String username) {
-        String s = "@";
-        return username.contains(s);
-    }
 
     public static List<String> dataLength(String userInfo) {
         int needLength = 117;

@@ -17,6 +17,7 @@ import org.mobile.htloginsdk.R;
 import org.mobile.htloginsdk.bean.LoginBean;
 import org.mobile.htloginsdk.bean.User;
 import org.mobile.htloginsdk.utils.Base64Utils;
+import org.mobile.htloginsdk.utils.DaoUtils;
 import org.mobile.htloginsdk.utils.HtLoginManager;
 import org.mobile.htloginsdk.utils.LogInStateListener;
 import org.mobile.htloginsdk.utils.LoginManager;
@@ -86,13 +87,14 @@ public class MainActivity extends Activity implements View.OnClickListener, LogI
         Log.e("---divice---", "" + diviceId + "--------------" + brand);
         String userInfo = "username=" + diviceId + "#device&name=" + brand + "&uuid=" + diviceId;
         data = Base64Utils.backData(userInfo);
-        String url = String.format(MyApp.url, "login", "100000", data);
-        Log.e("---url",appId+"  "+url);
+        String url = String.format(MyApp.url, "login", appId, data);
+        Log.e("---url", appId + "  " + url);
         requestJsonData(url, diviceId, brand, 1);
     }
 
     public void accountLogin() {
         startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        finish();
     }
 
     private void accountSignup() {
@@ -124,6 +126,7 @@ public class MainActivity extends Activity implements View.OnClickListener, LogI
         LoginManager.initialize(MainActivity.this);
         LoginManager.setFaceBookLoginParams(MainActivity.this, btn_facebook, null, this);
     }
+
     public void requestJsonData(String url, final String username, final String password, final int stats) {
         final HtLoginManager htLoginManager = HtLoginManager.getInstance();
         x.http().get(MyApp.getInstance().getRequestParams(url), new Callback.CommonCallback<String>() {
@@ -136,34 +139,18 @@ public class MainActivity extends Activity implements View.OnClickListener, LogI
                 if (loginBean != null) {
                     if (loginBean.getCode() == 0) {
                         DbManager db = x.getDb(((MyApp) getApplicationContext()).getDaoConfig());
-                        MyApp.getInstance().saveData(username, password, stats,1, loginBean,db);
+                        DaoUtils.saveData(username, password, stats, 1, loginBean,"","", db);
                         edit.putString("username", username);
                         edit.putInt("loginStats", stats);
-                        edit.putBoolean("bindStats",false);
+                        edit.putInt("bindStats", 1);
                         edit.apply();
-                        Toast.makeText(MainActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, R.string.login_success_orher, Toast.LENGTH_SHORT).show();
                         finish();
-                    } else if (loginBean.getCode() == 1) {
-                        //Toast.makeText(MainActivity.this, R.string.error_operation, Toast.LENGTH_SHORT).show();
-
-                    } else if (loginBean.getCode() == 40100) {
-                        //Toast.makeText(MainActivity.this, R.string.error_RSA, Toast.LENGTH_SHORT).show();
-
-                    } else if (loginBean.getCode() == 40101) {
-                        //Toast.makeText(MainActivity.this, R.string.error_parametr, Toast.LENGTH_SHORT).show();
-
-                    } else if (loginBean.getCode() == 40102) {
-                        //Toast.makeText(MainActivity.this, R.string.error_token, Toast.LENGTH_SHORT).show();
-
-                    } else if (loginBean.getCode() == 40103) {
-                        //Toast.makeText(MainActivity.this, R.string.over_time, Toast.LENGTH_SHORT).show();
-
-                    } else if (loginBean.getCode() == 40105) {
-                        //Toast.makeText(MainActivity.this, R.string.login_field_tip, Toast.LENGTH_SHORT).show();
-
-                    } else if (loginBean.getCode() == 40106) {
-                        //Toast.makeText(MainActivity.this, R.string.user_exist_tip, Toast.LENGTH_SHORT).show();
-
+                    } else if (loginBean.getCode()==40106){
+                        Toast.makeText(MainActivity.this, R.string.user_exist_tip, Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(MainActivity.this, R.string.login_fail, Toast.LENGTH_SHORT).show();
+                        Log.e("LoginErrorMassage","Code:"+loginBean.getCode()+"Massage:"+loginBean.getMsg());
                     }
                 }
             }

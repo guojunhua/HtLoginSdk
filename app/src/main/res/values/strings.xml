@@ -13,6 +13,22 @@
     <string name="signup">注册新账号</string>
     <string name="bind">绑定（注册为正式用户）</string>
     <string name="ACCOUNT">我同意服务条款和隐私条款</string>
+
+    <!--toast-->
+    <string name="login_success_orher">登录成功,请及时绑定官方账号以保护数据安全</string>
+    <string name="login_success">登录成功</string>
+    <string name="bind_success">绑定成功</string>
+    <string name="signup_success">注册成功</string>
+    <string name="login_fail">登录失败,请重试</string>
+    <string name="bind_fail">绑定失败,请重试</string>
+    <string name="signup_fail">注册失败,请重试</string>
+    <string name="user_exist_tip">用户名已存在</string>
+    <string name="null_email_or_password_tip">用户名，密码不能为空</string>
+    <string name="illegal_length_tip">用户名长度必须在6-32个字符之间</string>
+    <string name="illegal_uname_tip">请输入常用邮箱，方便密码找回</string>
+    <string name="illegal_pwd_tip">密码长度在6-32个字符之间</string>
+    <string name="agreement_tip">请认真阅读并同意服务协议和隐私协议</string>
+    <string name="signup_password_different">两次输入的密码不一致请重新输入</string>
     <string name="facebook_app_id" translatable="false">568867696604144</string>
 
 </resources>

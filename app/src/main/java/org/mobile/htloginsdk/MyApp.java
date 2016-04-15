@@ -72,49 +72,13 @@ public class MyApp extends Application {
                     public void onUpgrade(DbManager db, int oldVersion, int newVersion) {
                     }
                 });//数据库更新操作
-    }
-
-    public void saveData(String username, String password, int stats, int isBind, LoginBean loginBean,DbManager db) {
-        if (loginBean != null) {
-            UserLogin userLogin = new UserLogin();
-            userLogin.setUsername(username);
-            userLogin.setPassword(password);
-            userLogin.setLoginStats(stats);
-            userLogin.setIsBind(isBind);
-            userLogin.setName(loginBean.getData().getName());
-            userLogin.setToken(loginBean.getData().getToken());
-            userLogin.setUid(loginBean.getData().getUid());
-            try {
-               if (findData(userLogin,db)) {
-                    db.save(userLogin);
-                    Log.e("---save", "保存成功");
-               }
-            } catch (DbException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public boolean findData(UserLogin userLogin,DbManager db) {
-        boolean falg = true;
-        UserLogin userLogin1 = null;
+        DbManager db = x.getDb(daoConfig);
         try {
-            if (db.selector(UserLogin.class).findAll() != null) {
-                user = db.selector(UserLogin.class).findAll();
-                for (int i = 0; i < user.size(); i++) {
-                    if (user.get(i).getUsername().equals(userLogin.getUsername())) {
-                        falg = false;
-                    } else {
-                        falg = true;
-                    }
-                }
-            } else {
-                return true;
-            }
+            db.save(new UserLogin("1","1",1,2,"1","1","1","1","1"));
+            Log.e("---save", "保存成功");
         } catch (DbException e) {
             e.printStackTrace();
         }
-        return falg;
     }
 
     public RequestParams getRequestParams(String url) {

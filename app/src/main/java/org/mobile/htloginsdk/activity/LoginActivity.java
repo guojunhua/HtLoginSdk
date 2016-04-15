@@ -27,6 +27,7 @@ import org.mobile.htloginsdk.MyApp;
 import org.mobile.htloginsdk.R;
 import org.mobile.htloginsdk.bean.LoginBean;
 import org.mobile.htloginsdk.utils.Base64Utils;
+import org.mobile.htloginsdk.utils.DaoUtils;
 import org.mobile.htloginsdk.utils.HtLoginManager;
 import org.mobile.htloginsdk.utils.MacAddress;
 import org.xutils.DbManager;
@@ -80,7 +81,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             appId = sp.getString("appId", "");
         }
         edit = sp.edit();
-        edit_account.setFocusable(true);
     }
 
     @Override
@@ -91,18 +91,18 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             username = edit_account.getText().toString();
             password = edit_password.getText().toString();
             if (Base64Utils.isEmpty(username, password)) {
-                //Toast.makeText(LoginActivity.this, R.string.null_email_or_password_tip, Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, R.string.null_email_or_password_tip, Toast.LENGTH_SHORT).show();
             } else if (username.length() < 6 || username.length() > 32) {
-                // Toast.makeText(LoginActivity.this, R.string.illegal_length_tip, Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, R.string.illegal_length_tip, Toast.LENGTH_SHORT).show();
                 edit_account.setText("");
-            } else if (Base64Utils.isContains(username) && !Base64Utils.isEmail(username)) {
-                //Toast.makeText(LoginActivity.this, R.string.illegal_uname_tip, Toast.LENGTH_SHORT).show();
+            } else if (!Base64Utils.isEmail(username)) {
+                Toast.makeText(LoginActivity.this, R.string.illegal_uname_tip, Toast.LENGTH_SHORT).show();
                 edit_account.setText("");
             } else if (password.length() < 6 || password.length() > 32) {
-                //Toast.makeText(LoginActivity.this, R.string.illegal_pwd_tip, Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, R.string.illegal_pwd_tip, Toast.LENGTH_SHORT).show();
                 edit_password.setText("");
             } else if (!check.isChecked()) {
-                //Toast.makeText(LoginActivity.this, R.string.illegal_contain_tip, Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, R.string.agreement_tip, Toast.LENGTH_SHORT).show();
             } else {
                 String userInfo = "username=" + username + "&password=" + password + "&uuid=" + new MacAddress(this).getMacAddressAndroid();
                 data = Base64Utils.backData(userInfo);
@@ -127,34 +127,18 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 if (loginBean != null) {
                     if (loginBean.getCode() == 0) {
                         DbManager db = x.getDb(((MyApp) getApplicationContext()).getDaoConfig());
-                        MyApp.getInstance().saveData(username, password, 2,2, loginBean,db);
+                        DaoUtils.saveData(username, password, 2, 2, loginBean,username,password, db);
                         edit.putString("username", username);
                         edit.putInt("loginStats", 2);
-                        edit.putBoolean("bindStats",false);
+                        edit.putInt("bindStats",2);
                         edit.apply();
-                        Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();
                         finish();
-                    } else if (loginBean.getCode() == 1) {
-                        //Toast.makeText(MainActivity.this, R.string.error_operation, Toast.LENGTH_SHORT).show();
-
-                    } else if (loginBean.getCode() == 40100) {
-                        //Toast.makeText(MainActivity.this, R.string.error_RSA, Toast.LENGTH_SHORT).show();
-
-                    } else if (loginBean.getCode() == 40101) {
-                        //Toast.makeText(MainActivity.this, R.string.error_parametr, Toast.LENGTH_SHORT).show();
-
-                    } else if (loginBean.getCode() == 40102) {
-                        //Toast.makeText(MainActivity.this, R.string.error_token, Toast.LENGTH_SHORT).show();
-
-                    } else if (loginBean.getCode() == 40103) {
-                        //Toast.makeText(MainActivity.this, R.string.over_time, Toast.LENGTH_SHORT).show();
-
-                    } else if (loginBean.getCode() == 40105) {
-                        //Toast.makeText(MainActivity.this, R.string.login_field_tip, Toast.LENGTH_SHORT).show();
-
-                    } else if (loginBean.getCode() == 40106) {
-                        //Toast.makeText(MainActivity.this, R.string.user_exist_tip, Toast.LENGTH_SHORT).show();
-
+                    } else if (loginBean.getCode()==40106){
+                        Toast.makeText(LoginActivity.this, R.string.user_exist_tip, Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(LoginActivity.this, R.string.login_fail, Toast.LENGTH_SHORT).show();
+                        Log.e("LoginErrorMassage","Code:"+loginBean.getCode()+"Massage:"+loginBean.getMsg());
                     }
                 }
             }

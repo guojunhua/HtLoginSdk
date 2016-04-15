@@ -38,9 +38,6 @@
             android:name=".activity.JudgeActivity"
             android:screenOrientation="landscape"></activity>
         <activity
-            android:name=".activity.LoginTypeActivity"
-            android:screenOrientation="landscape"></activity>
-        <activity
             android:name=".activity.WebActivity"
             android:screenOrientation="landscape"></activity>
         <activity

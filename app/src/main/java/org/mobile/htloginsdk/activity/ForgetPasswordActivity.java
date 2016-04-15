@@ -7,8 +7,10 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import org.mobile.htloginsdk.R;
+import org.mobile.htloginsdk.utils.Base64Utils;
 
 /**
  * Created by 郭君华 on 2016/4/5.
@@ -18,6 +20,7 @@ public class ForgetPasswordActivity extends Activity implements View.OnClickList
     private Button reset;
     private ImageView reset_back;
     private EditText edit_reset;
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +37,12 @@ public class ForgetPasswordActivity extends Activity implements View.OnClickList
     @Override
     public void onClick(View v) {
         if (v.getId()==R.id.reset){
-
+            email = edit_reset.getText().toString();
+            if (!Base64Utils.isEmail(email)){
+                Toast.makeText(ForgetPasswordActivity.this, R.string.illegal_uname_tip, Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(ForgetPasswordActivity.this, "我们已将密码重置链接发至您的邮箱，请注意查收", Toast.LENGTH_SHORT).show();
+            }
         }else if (v.getId()==R.id.reset_back){
             finish();
         }

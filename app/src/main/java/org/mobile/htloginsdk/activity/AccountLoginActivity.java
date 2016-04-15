@@ -33,6 +33,7 @@ import org.mobile.htloginsdk.bean.LoginBean;
 import org.mobile.htloginsdk.bean.User;
 import org.mobile.htloginsdk.bean.UserLogin;
 import org.mobile.htloginsdk.utils.Base64Utils;
+import org.mobile.htloginsdk.utils.DaoUtils;
 import org.mobile.htloginsdk.utils.HtLoginManager;
 import org.mobile.htloginsdk.utils.LogInStateListener;
 import org.mobile.htloginsdk.utils.LoginManager;
@@ -68,6 +69,7 @@ public class AccountLoginActivity extends Activity implements View.OnClickListen
     private PopupWindow popupWindow;
     private DbManager db;
     private LinearLayout linear;
+    private String loginAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,9 +105,22 @@ public class AccountLoginActivity extends Activity implements View.OnClickListen
         if (v.getId() == R.id.accountlogin_down) {
             showSelectNumberDialog();
         } else if (v.getId() == R.id.accountlogin_login) {
-
+            loginAccount();
         } else if (v.getId() == R.id.accountlogin_signup) {
             startActivity(new Intent(AccountLoginActivity.this, SignupActivity.class));
+        }
+    }
+
+    private void loginAccount() {
+        db = x.getDb(((MyApp) getApplicationContext()).getDaoConfig());
+        loginAccount = email.getText().toString();
+        UserLogin userLogin = DaoUtils.findOne(loginAccount, db);
+        if (userLogin != null) {
+            String userInfo = "username=" + userLogin.getUsername() + "&password=" + userLogin.getPassword() + "&uuid=" + new MacAddress(this).getMacAddressAndroid();
+            data = Base64Utils.backData(userInfo);
+            String url = String.format(MyApp.url, "login", appId, data) + "&format=json";
+            Log.e("---gege---", " " + userInfo + "----" + url);
+            requestJsonData(url, userLogin.getUsername(), userLogin.getPassword(), 2, 2, userLogin.getUsername(), userLogin.getPassword());
         }
     }
 
@@ -117,12 +132,23 @@ public class AccountLoginActivity extends Activity implements View.OnClickListen
 
     @Override
     public void OnLoginSuccess(User user, String logType) {
-        id = user.getUserId();
-        name = user.getUserName();
-        String userInfo = "username=" + id + "#facebook&name=" + name + "&uuid=" + new MacAddress(this).getMacAddressAndroid();
-        data = Base64Utils.backData(userInfo);
-        String url = String.format(MyApp.url, "login", appId, data);
-        requestJsonData(url, id, name, 3);
+        db = x.getDb(((MyApp) getApplicationContext()).getDaoConfig());
+        UserLogin userLogin = DaoUtils.findOne(user.getUserId(), db);
+        if (userLogin != null) {
+            id = user.getUserId();
+            name = user.getUserName();
+            String userInfo = "username=" + userLogin.getUsername() + "#facebook&name=" + userLogin.getPassword() + "&uuid=" + new MacAddress(this).getMacAddressAndroid();
+            data = Base64Utils.backData(userInfo);
+            String url = String.format(MyApp.url, "login", appId, data);
+            requestJsonData(url, userLogin.getUsername(), userLogin.getPassword(), 3, userLogin.getIsBind(), userLogin.getEmail(), userLogin.getEmailPassword());
+        } else {
+            id = user.getUserId();
+            name = user.getUserName();
+            String userInfo = "username=" + id + "#facebook&name=" + name + "&uuid=" + new MacAddress(this).getMacAddressAndroid();
+            data = Base64Utils.backData(userInfo);
+            String url = String.format(MyApp.url, "login", appId, data);
+            requestJsonData(url, id, name, 3, 1, "", "");
+        }
     }
 
     @Override
@@ -155,23 +181,19 @@ public class AccountLoginActivity extends Activity implements View.OnClickListen
         popupWindow.setFocusable(true);
         // 显示
         popupWindow.showAsDropDown(linear);
-
     }
 
     private List<String> getNumbers() {
         List<String> numbers = new ArrayList<String>();
-        init();
-        if (datas == null) {
-
-        } else {
-            Log.e("---user1", datas.toString());
-            for (int i = 0; i < datas.size(); i++) {
-                if (datas.get(i).getIsBind() == 1) {
-                    numbers.add(datas.get(i).getUsername());
-                }
+        db = x.getDb(((MyApp) getApplicationContext()).getDaoConfig());
+        datas = DaoUtils.init(db);
+        Log.e("---user1", datas.toString());
+        for (int i = 0; i < datas.size(); i++) {
+            if (datas.get(i).getIsBind() != 1&&datas.get(i).getLoginStats()==2) {
+                numbers.add(datas.get(i).getUsername());
             }
-            numbers.add("其他账户登录");
         }
+        numbers.add("其他账户登录");
         return numbers;
     }
 
@@ -187,7 +209,7 @@ public class AccountLoginActivity extends Activity implements View.OnClickListen
         popupWindow.dismiss();
     }
 
-    public void requestJsonData(String url, final String username, final String password, final int stats) {
+    public void requestJsonData(String url, final String username, final String password, final int stats, final int isBind, final String email, final String emailPassword) {
         final HtLoginManager htLoginManager = HtLoginManager.getInstance();
         x.http().get(MyApp.getInstance().getRequestParams(url), new Callback.CommonCallback<String>() {
             private LoginBean loginBean;
@@ -198,34 +220,19 @@ public class AccountLoginActivity extends Activity implements View.OnClickListen
                 htLoginManager.setLoginBean(loginBean);
                 if (loginBean != null) {
                     if (loginBean.getCode() == 0) {
-                        //MyApp.getInstance().saveData(username, password, stats,1, loginBean,);
+                        DbManager db = x.getDb(((MyApp) getApplicationContext()).getDaoConfig());
+                        DaoUtils.saveData(username, password, stats, isBind, loginBean, email, emailPassword, db);
                         edit.putString("username", username);
                         edit.putInt("loginStats", stats);
-                        edit.putBoolean("bindStats", false);
+                        edit.putInt("bindStats", isBind);
                         edit.apply();
-                        Toast.makeText(AccountLoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AccountLoginActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();
                         finish();
-                    } else if (loginBean.getCode() == 1) {
-                        //Toast.makeText(MainActivity.this, R.string.error_operation, Toast.LENGTH_SHORT).show();
-
-                    } else if (loginBean.getCode() == 40100) {
-                        //Toast.makeText(MainActivity.this, R.string.error_RSA, Toast.LENGTH_SHORT).show();
-
-                    } else if (loginBean.getCode() == 40101) {
-                        //Toast.makeText(MainActivity.this, R.string.error_parametr, Toast.LENGTH_SHORT).show();
-
-                    } else if (loginBean.getCode() == 40102) {
-                        //Toast.makeText(MainActivity.this, R.string.error_token, Toast.LENGTH_SHORT).show();
-
-                    } else if (loginBean.getCode() == 40103) {
-                        //Toast.makeText(MainActivity.this, R.string.over_time, Toast.LENGTH_SHORT).show();
-
-                    } else if (loginBean.getCode() == 40105) {
-                        //Toast.makeText(MainActivity.this, R.string.login_field_tip, Toast.LENGTH_SHORT).show();
-
                     } else if (loginBean.getCode() == 40106) {
-                        //Toast.makeText(MainActivity.this, R.string.user_exist_tip, Toast.LENGTH_SHORT).show();
-
+                        Toast.makeText(AccountLoginActivity.this, R.string.user_exist_tip, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(AccountLoginActivity.this, R.string.login_fail, Toast.LENGTH_SHORT).show();
+                        Log.e("LoginErrorMassage", "Code:" + loginBean.getCode() + "Massage:" + loginBean.getMsg());
                     }
                 }
             }
@@ -276,38 +283,46 @@ public class AccountLoginActivity extends Activity implements View.OnClickListen
                 mHolder = (NumberViewHolder) convertView.getTag();
             }
 
-            mHolder.tvNumber.setText(numbers.get(position));
-            mHolder.ibDelete.setTag(position);
-            mHolder.ibDelete.setOnClickListener(new View.OnClickListener() {
+            if ((position + 1) == numbers.size()) {
+                mHolder.logo.setVisibility(View.INVISIBLE);
+                mHolder.ibDelete.setVisibility(View.INVISIBLE);
+                mHolder.tvNumber.setText(numbers.get(position));
+            } else {
+                mHolder.logo.setVisibility(View.VISIBLE);
+                mHolder.ibDelete.setVisibility(View.VISIBLE);
+                mHolder.tvNumber.setText(numbers.get(position));
+                mHolder.ibDelete.setTag(position);
+                mHolder.ibDelete.setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(final View v) {
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(AccountLoginActivity.this);
-                    View view = LayoutInflater.from(AccountLoginActivity.this).inflate(R.layout.dialog_view, null);
-                    builder.setCustomTitle(view);
-                    builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            int index = (Integer) v.getTag();
-                            deleteDate(numbers.get(position));
-                            init();
-                            if (datas.size()==0) {
-                                startActivity(new Intent(AccountLoginActivity.this, MainActivity.class));
-                                popupWindow.dismiss();
-                                finish();
+                    @Override
+                    public void onClick(final View v) {
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(AccountLoginActivity.this);
+                        View view = LayoutInflater.from(AccountLoginActivity.this).inflate(R.layout.dialog_view, null);
+                        builder.setCustomTitle(view);
+                        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                int index = (Integer) v.getTag();
+                                DaoUtils.deleteDate(numbers.get(position), db);
+                                datas = DaoUtils.init(db);
+                                if ((datas.size()-1) == 0) {
+                                    startActivity(new Intent(AccountLoginActivity.this, MainActivity.class));
+                                    popupWindow.dismiss();
+                                    finish();
+                                }
+                                numbers.remove(index);
+                                numbersAdapter.notifyDataSetChanged();
+                                dialog.dismiss();
                             }
-                            numbers.remove(index);
-                            numbersAdapter.notifyDataSetChanged();
-                            dialog.dismiss();
-                        }
-                    }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).create().show();
-                }
-            });
+                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).create().show();
+                    }
+                });
+            }
 
             return convertView;
         }
@@ -316,26 +331,6 @@ public class AccountLoginActivity extends Activity implements View.OnClickListen
             public TextView tvNumber;
             public ImageButton ibDelete;
             public ImageView logo;
-        }
-    }
-    public void deleteDate(String username) {
-        db = x.getDb(((MyApp) getApplicationContext()).getDaoConfig());
-        try {
-            UserLogin userLogin = db.selector(UserLogin.class).where("username", "=", username).findFirst();
-            if (userLogin != null) {
-                db.delete(userLogin);
-            }
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void init() {
-        db = x.getDb(((MyApp) getApplicationContext()).getDaoConfig());
-        try {
-            datas = db.selector(UserLogin.class).findAll();
-        } catch (DbException e) {
-            e.printStackTrace();
         }
     }
 }

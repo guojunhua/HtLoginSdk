@@ -63,6 +63,7 @@
                 android:layout_marginTop="15dp"
                 android:background="@drawable/btn_white"
                 android:text="@string/login"
+                android:gravity="center"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
@@ -75,6 +76,7 @@
                 android:layout_marginTop="15dp"
                 android:background="@drawable/btn_login"
                 android:text="@string/bind"
+                android:gravity="center"
                 android:textColor="@color/button"
                 android:textSize="20sp" />
 

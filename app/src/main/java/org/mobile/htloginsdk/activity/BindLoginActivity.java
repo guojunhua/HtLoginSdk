@@ -36,6 +36,7 @@ import org.mobile.htloginsdk.bean.LoginBean;
 import org.mobile.htloginsdk.bean.User;
 import org.mobile.htloginsdk.bean.UserLogin;
 import org.mobile.htloginsdk.utils.Base64Utils;
+import org.mobile.htloginsdk.utils.DaoUtils;
 import org.mobile.htloginsdk.utils.HtLoginManager;
 import org.mobile.htloginsdk.utils.LogInStateListener;
 import org.mobile.htloginsdk.utils.LoginManager;
@@ -72,7 +73,8 @@ public class BindLoginActivity extends Activity implements View.OnClickListener,
     private PopupWindow popupWindow;
     private DbManager db;
     private LinearLayout linear;
-    private boolean isShow;
+    private boolean isShow = true;
+    private String loginAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,23 +113,36 @@ public class BindLoginActivity extends Activity implements View.OnClickListener,
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.bindlogin_dowm) {
-            if (popupWindow == null) {
-                if (numbersAdapter == null) {
-                    showSelectNumberDialog();
-                    isShow = true;
-                }
-            } else if (popupWindow.isShowing()) {
-                popupWindow.dismiss();
-                isShow = false;
-            } else if (!popupWindow.isShowing()) {
-                popupWindow.showAsDropDown(linear);
-                isShow = true;
-            }
-            Log.e("---isShow", isShow + "  ");
+//            if (isShow){
+            showSelectNumberDialog();
+//            }else if (!isShow){
+//                isShow = true;
+//            }
+//            Log.e("---isShow", isShow + "  ");
         } else if (v.getId() == R.id.bindlogin_btn_login) {
-
+            loginGame();
         } else if (v.getId() == R.id.bindlogin_btn_bind) {
             startActivity(new Intent(BindLoginActivity.this, BindActivity.class));
+        }
+    }
+
+    private void loginGame() {
+        db = x.getDb(((MyApp) getApplicationContext()).getDaoConfig());
+        loginAccount = account.getText().toString();
+        UserLogin userLogin = DaoUtils.findOne(loginAccount,db);
+        if (userLogin!=null){
+            if (userLogin.getLoginStats()==1) {
+                String userInfo = "username=" + userLogin.getUsername() + "#device&name=" + userLogin.getPassword() + "&uuid=" +new MacAddress(this).getMacAddressAndroid();
+                data = Base64Utils.backData(userInfo);
+                String url = String.format(MyApp.url, "login", appId, data);
+                Log.e("---url", appId + "  " + url);
+                requestJsonData(url, userLogin.getUsername(), userLogin.getPassword(), 1);
+            }else if (userLogin.getLoginStats()==3){
+                String userInfo = "username=" + userLogin.getUsername() + "#facebook&name=" + userLogin.getPassword() + "&uuid=" + new MacAddress(this).getMacAddressAndroid();
+                data = Base64Utils.backData(userInfo);
+                String url = String.format(MyApp.url, "login", appId, data);
+                requestJsonData(url, userLogin.getUsername(), userLogin.getPassword(), 3);
+            }
         }
     }
 
@@ -135,6 +150,7 @@ public class BindLoginActivity extends Activity implements View.OnClickListener,
      * 弹出选择号码对话框
      */
     private void showSelectNumberDialog() {
+        isShow = false;
         numbers = getNumbers();
         ListView lv = new ListView(this);
         lv.setBackgroundResource(R.drawable.whilt);
@@ -155,18 +171,15 @@ public class BindLoginActivity extends Activity implements View.OnClickListener,
 
     private List<String> getNumbers() {
         List<String> numbers = new ArrayList<String>();
-        init();
-        if (datas == null) {
-
-        } else {
-            Log.e("---user1", datas.toString());
-            for (int i = 0; i < datas.size(); i++) {
-                if (datas.get(i).getIsBind() == 1) {
-                    numbers.add(datas.get(i).getUsername());
-                }
+        db = x.getDb(((MyApp) getApplicationContext()).getDaoConfig());
+        datas = DaoUtils.init(db);
+        Log.e("---user1", datas.toString());
+        for (int i = 0; i < datas.size(); i++) {
+            if (datas.get(i).getIsBind() == 1 && datas.get(i).getLoginStats() != 2) {
+                numbers.add(datas.get(i).getUsername());
             }
-            numbers.add("其他账户登录");
         }
+        numbers.add("其他账户登录");
         return numbers;
     }
 
@@ -219,34 +232,19 @@ public class BindLoginActivity extends Activity implements View.OnClickListener,
                 htLoginManager.setLoginBean(loginBean);
                 if (loginBean != null) {
                     if (loginBean.getCode() == 0) {
-                        //MyApp.getInstance().saveData(username, password, stats,1, loginBean,);
+                        DbManager db = x.getDb(((MyApp) getApplicationContext()).getDaoConfig());
+                        DaoUtils.saveData(username, password, stats, 1, loginBean,"","", db);
                         edit.putString("username", username);
                         edit.putInt("loginStats", stats);
-                        edit.putBoolean("bindStats", false);
+                        edit.putInt("bindStats", 1);
                         edit.apply();
-                        Toast.makeText(BindLoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BindLoginActivity.this, R.string.login_success_orher, Toast.LENGTH_SHORT).show();
                         finish();
-                    } else if (loginBean.getCode() == 1) {
-                        //Toast.makeText(MainActivity.this, R.string.error_operation, Toast.LENGTH_SHORT).show();
-
-                    } else if (loginBean.getCode() == 40100) {
-                        //Toast.makeText(MainActivity.this, R.string.error_RSA, Toast.LENGTH_SHORT).show();
-
-                    } else if (loginBean.getCode() == 40101) {
-                        //Toast.makeText(MainActivity.this, R.string.error_parametr, Toast.LENGTH_SHORT).show();
-
-                    } else if (loginBean.getCode() == 40102) {
-                        //Toast.makeText(MainActivity.this, R.string.error_token, Toast.LENGTH_SHORT).show();
-
-                    } else if (loginBean.getCode() == 40103) {
-                        //Toast.makeText(MainActivity.this, R.string.over_time, Toast.LENGTH_SHORT).show();
-
-                    } else if (loginBean.getCode() == 40105) {
-                        //Toast.makeText(MainActivity.this, R.string.login_field_tip, Toast.LENGTH_SHORT).show();
-
-                    } else if (loginBean.getCode() == 40106) {
-                        //Toast.makeText(MainActivity.this, R.string.user_exist_tip, Toast.LENGTH_SHORT).show();
-
+                    } else if (loginBean.getCode()==40106){
+                        Toast.makeText(BindLoginActivity.this, R.string.user_exist_tip, Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(BindLoginActivity.this, R.string.login_fail, Toast.LENGTH_SHORT).show();
+                        Log.e("LoginErrorMassage","Code:"+loginBean.getCode()+"Massage:"+loginBean.getMsg());
                     }
                 }
             }
@@ -316,10 +314,11 @@ public class BindLoginActivity extends Activity implements View.OnClickListener,
                         builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                db = x.getDb(((MyApp) getApplicationContext()).getDaoConfig());
                                 int index = (Integer) v.getTag();
-                                deleteDate(numbers.get(position));
-                                init();
-                                if (datas.size()==0) {
+                                DaoUtils.deleteDate(numbers.get(position), db);
+                                datas = DaoUtils.init(db);
+                                if ((datas.size()-1) == 0) {
                                     startActivity(new Intent(BindLoginActivity.this, MainActivity.class));
                                     popupWindow.dismiss();
                                     finish();
@@ -348,25 +347,6 @@ public class BindLoginActivity extends Activity implements View.OnClickListener,
         }
     }
 
-    public void deleteDate(String username) {
-        db = x.getDb(((MyApp) getApplicationContext()).getDaoConfig());
-        try {
-            UserLogin userLogin = db.selector(UserLogin.class).where("username", "=", username).findFirst();
-            if (userLogin != null) {
-                db.delete(userLogin);
-            }
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
-    }
 
-    public void init() {
-        db = x.getDb(((MyApp) getApplicationContext()).getDaoConfig());
-        try {
-            datas = db.selector(UserLogin.class).findAll();
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
-    }
 
 }
