@@ -166,8 +166,9 @@ public class SignupActivity extends Activity implements View.OnClickListener {
 
             @Override
             public void onClick(View widget) {
-
-                startActivity(new Intent(SignupActivity.this, WebActivity.class));
+                Intent service = new Intent(SignupActivity.this, AgreementActivity.class);
+                service.putExtra("type",1);
+                startActivity(service);
             }
         }, 3, 7, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         //设置文字的前景
@@ -179,8 +180,9 @@ public class SignupActivity extends Activity implements View.OnClickListener {
 
             @Override
             public void onClick(View widget) {
-
-                startActivity(new Intent(SignupActivity.this, WebActivity.class));
+                Intent service = new Intent(SignupActivity.this, AgreementActivity.class);
+                service.putExtra("type",2);
+                startActivity(service);
             }
         }, 8, 12, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         //设置文字的前景色

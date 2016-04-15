@@ -200,8 +200,11 @@ public class AccountLoginActivity extends Activity implements View.OnClickListen
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if ((position + 1) == numbers.size()) {
-            startActivity(new Intent(AccountLoginActivity.this, LoginActivity.class));
+            Intent accountLogin = new Intent(AccountLoginActivity.this, LoginActivity.class);
+            accountLogin.putExtra("loginType",3);
+            startActivity(accountLogin);
             popupWindow.dismiss();
+            finish();
         } else {
             String number = numbers.get(position);
             email.setText(number);
@@ -290,6 +293,7 @@ public class AccountLoginActivity extends Activity implements View.OnClickListen
             } else {
                 mHolder.logo.setVisibility(View.VISIBLE);
                 mHolder.ibDelete.setVisibility(View.VISIBLE);
+                mHolder.logo.setImageResource(R.drawable.account);
                 mHolder.tvNumber.setText(numbers.get(position));
                 mHolder.ibDelete.setTag(position);
                 mHolder.ibDelete.setOnClickListener(new View.OnClickListener() {
@@ -332,5 +336,9 @@ public class AccountLoginActivity extends Activity implements View.OnClickListen
             public ImageButton ibDelete;
             public ImageView logo;
         }
+    }
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(AccountLoginActivity.this, R.string.loginBack, Toast.LENGTH_SHORT).show();
     }
 }

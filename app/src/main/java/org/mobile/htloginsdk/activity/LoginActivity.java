@@ -86,7 +86,17 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.login_back) {
-            finish();
+            int loginType = getIntent().getIntExtra("loginType",0);
+            if (loginType!=0&&loginType==1){
+                startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                finish();
+            }else if (loginType!=0&&loginType==2){
+                startActivity(new Intent(LoginActivity.this,BindLoginActivity.class));
+                finish();
+            }else if (loginType!=0&&loginType==3){
+                startActivity(new Intent(LoginActivity.this,AccountLoginActivity.class));
+                finish();
+            }
         } else if (v.getId() == R.id.login_btn) {
             username = edit_account.getText().toString();
             password = edit_password.getText().toString();
@@ -169,8 +179,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
             @Override
             public void onClick(View widget) {
-
-                startActivity(new Intent(LoginActivity.this, WebActivity.class));
+                Intent service = new Intent(LoginActivity.this, AgreementActivity.class);
+                service.putExtra("type",1);
+                startActivity(service);
             }
         }, 3, 7, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         //设置文字的前景
@@ -182,8 +193,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
             @Override
             public void onClick(View widget) {
-
-                startActivity(new Intent(LoginActivity.this, WebActivity.class));
+                Intent service = new Intent(LoginActivity.this, AgreementActivity.class);
+                service.putExtra("type",2);
+                startActivity(service);
             }
         }, 8, 12, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         //设置文字的前景色

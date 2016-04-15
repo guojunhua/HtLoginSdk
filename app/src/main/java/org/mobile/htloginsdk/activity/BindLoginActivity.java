@@ -186,8 +186,11 @@ public class BindLoginActivity extends Activity implements View.OnClickListener,
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if ((position + 1) == numbers.size()) {
-            startActivity(new Intent(BindLoginActivity.this, LoginActivity.class));
+            Intent bindLogin = new Intent(BindLoginActivity.this, LoginActivity.class);
+            bindLogin.putExtra("loginType",2);
+            startActivity(bindLogin);
             popupWindow.dismiss();
+            finish();
         } else {
             String number = numbers.get(position);
             account.setText(number);
@@ -302,6 +305,13 @@ public class BindLoginActivity extends Activity implements View.OnClickListener,
             } else {
                 mHolder.logo.setVisibility(View.VISIBLE);
                 mHolder.ibDelete.setVisibility(View.VISIBLE);
+                db = x.getDb(((MyApp) getApplicationContext()).getDaoConfig());
+                int type = DaoUtils.findOne(numbers.get(position),db).getLoginStats();
+                if (type==1){
+                    mHolder.logo.setImageResource(R.drawable.tourst);
+                }else if (type==3){
+                    mHolder.logo.setImageResource(R.drawable.facebook_logo);
+                }
                 mHolder.tvNumber.setText(numbers.get(position));
                 mHolder.ibDelete.setTag(position);
                 mHolder.ibDelete.setOnClickListener(new View.OnClickListener() {
@@ -346,7 +356,10 @@ public class BindLoginActivity extends Activity implements View.OnClickListener,
             public ImageView logo;
         }
     }
-
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(BindLoginActivity.this, R.string.loginBack, Toast.LENGTH_SHORT).show();
+    }
 
 
 }

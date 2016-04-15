@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -93,7 +94,9 @@ public class MainActivity extends Activity implements View.OnClickListener, LogI
     }
 
     public void accountLogin() {
-        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        Intent login = new Intent(MainActivity.this, LoginActivity.class);
+        login.putExtra("loginType",1);
+        startActivity(login);
         finish();
     }
 
@@ -169,5 +172,10 @@ public class MainActivity extends Activity implements View.OnClickListener, LogI
             public void onFinished() {
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(MainActivity.this, R.string.loginBack, Toast.LENGTH_SHORT).show();
     }
 }
