@@ -23,4 +23,14 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <!-- Loding_dialog样式Start -->
+    <style name="Dialog_bocop">
+        <item name="android:windowBackground">@color/bocop_dialog_bg</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+    </style>
+    <!-- Loding_dialog样式End -->
+
 </resources>

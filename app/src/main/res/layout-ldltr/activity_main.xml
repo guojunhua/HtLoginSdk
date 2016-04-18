@@ -5,8 +5,8 @@
     android:gravity="center"
     android:orientation="vertical">
     <LinearLayout
-        android:layout_width="400dp"
-        android:layout_height="300dp"
+        android:layout_width="@dimen/layout_width"
+        android:layout_height="@dimen/layout_hight"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
@@ -18,47 +18,48 @@
             <Button
                 android:id="@+id/login_tourist"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_height="@dimen/item_layout_hight"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"
                 android:background="@drawable/btn_login"
-                android:text="快速登录"
+                android:text="@string/tourist_login"
+                android:gravity="center"
                 android:textColor="@color/button"
-                android:textSize="20sp" />
+                android:textSize="@dimen/textBtn" />
 
             <Button
                 android:id="@+id/login_account"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="15dp"
+                android:layout_height="@dimen/item_layout_hight"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"
+                android:layout_marginTop="@dimen/layout_marginLeft"
                 android:background="@drawable/btn_white"
-                android:text="登录"
+                android:text="@string/login"
+                android:gravity="center"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="@dimen/textBtn" />
             <Button
                 android:id="@+id/login_signup"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="15dp"
+                android:layout_height="@dimen/item_layout_hight"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"
+                android:layout_marginTop="@dimen/layout_marginLeft"
                 android:background="@drawable/btn_white"
-                android:text="注册新账号"
+                android:text="@string/signup"
+                android:gravity="center"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="@dimen/textBtn" />
             <Button
                 android:id="@+id/login_facebook"
-                android:layout_width="150dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="15dp"
+                android:layout_width="@dimen/layout_width_facebook"
+                android:layout_height="@dimen/item_layout_hight"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"
+                android:layout_marginTop="@dimen/layout_marginLeft"
                 android:layout_gravity="center"
-                android:background="@drawable/facebook"
-                android:textColor="@color/button"
-                android:textSize="20sp" />
+                android:background="@drawable/facebook" />
 
         </LinearLayout>
     </LinearLayout>

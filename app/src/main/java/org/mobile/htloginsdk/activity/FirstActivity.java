@@ -36,11 +36,11 @@ public class FirstActivity extends Activity {
         HtLoginManager.getInstance().registerCallback(new HeTuCallback<LoginBean>() {
             @Override
             public void onSuccess(LoginBean responseInfo) {
-                Log.e("---log","  "+responseInfo.toString());
+
             }
 
             @Override
-            public void onFailure(HttpException error, String msg) {
+            public void onFailure(Throwable ex, boolean isOnCallback) {
 
             }
         });

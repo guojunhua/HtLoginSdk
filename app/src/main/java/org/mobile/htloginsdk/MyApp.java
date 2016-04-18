@@ -85,16 +85,4 @@ public class MyApp extends Application {
         RequestParams params = new RequestParams(url);
         return params;
     }
-
-    public AlertDialog getAlertDialog(Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View view = LayoutInflater.from(context).inflate(R.layout.alert_layout, null);
-        tv_title = ((TextView) view.findViewById(R.id.alert_tv));
-        iv_anim = ((ImageView) view.findViewById(R.id.alert_iv));
-        iv_anim.setBackgroundResource(R.drawable.loadanimation);
-        animation = ((AnimationDrawable) iv_anim.getBackground());
-        builder.setView(view);
-        //tv_title.setText(this.getString(R.string.loading));
-        return builder.create();
-    }
 }

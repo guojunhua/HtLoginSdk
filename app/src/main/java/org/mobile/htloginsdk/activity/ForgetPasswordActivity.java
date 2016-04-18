@@ -41,7 +41,7 @@ public class ForgetPasswordActivity extends Activity implements View.OnClickList
             if (!Base64Utils.isEmail(email)){
                 Toast.makeText(ForgetPasswordActivity.this, R.string.illegal_uname_tip, Toast.LENGTH_SHORT).show();
             }else {
-                Toast.makeText(ForgetPasswordActivity.this, "我们已将密码重置链接发至您的邮箱，请注意查收", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ForgetPasswordActivity.this, R.string.forget_password, Toast.LENGTH_SHORT).show();
             }
         }else if (v.getId()==R.id.reset_back){
             finish();

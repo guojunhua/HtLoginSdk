@@ -3,4 +3,22 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="layout_width">400dp</dimen>
+    <dimen name="layout_hight">300dp</dimen>
+    <dimen name="item_layout_hight">50dp</dimen>
+    <dimen name="layout_margin">30dp</dimen>
+    <dimen name="layout_width1">40dp</dimen>
+    <dimen name="layout_hight1">35dp</dimen>
+    <dimen name="layout_marginTop">10dp</dimen>
+    <dimen name="layout_marginLeft">15dp</dimen>
+    <dimen name="layout_marginBottom">5dp</dimen>
+    <dimen name="layout_hight_view">2dp</dimen>
+    <dimen name="layout_margin_right">20dp</dimen>
+    <dimen name="layout_width_facebook">150dp</dimen>
+    <dimen name="dialog_view_hight">100dp</dimen>
+
+    <dimen name="textSize_title">30sp</dimen>
+    <dimen name="textBtn">20sp</dimen>
+    <dimen name="textForget">16sp</dimen>
 </resources>

@@ -6,22 +6,22 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="400dp"
-        android:layout_height="300dp"
+        android:layout_width="@dimen/layout_width"
+        android:layout_height="@dimen/layout_hight"
         android:background="@color/background"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="@dimen/layout_width1"
             android:background="@drawable/head">
 
             <ImageView
                 android:id="@+id/signup_back"
-                android:layout_width="50dp"
-                android:layout_height="35dp"
+                android:layout_width="@dimen/item_layout_hight"
+                android:layout_height="@dimen/layout_hight1"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="30dp"
+                android:layout_marginLeft="@dimen/layout_margin"
                 android:src="@drawable/back" />
         </LinearLayout>
 
@@ -33,20 +33,20 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="10dp"
+                android:layout_height="@dimen/layout_width1"
+                android:layout_marginBottom="@dimen/layout_marginBottom"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"
+                android:layout_marginTop="@dimen/layout_marginTop"
                 android:background="@drawable/edit_bg"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_width="@dimen/layout_margin"
+                    android:layout_height="@dimen/layout_margin"
+                    android:layout_marginLeft="@dimen/layout_marginLeft"
+                    android:layout_marginRight="@dimen/layout_marginLeft"
                     android:src="@drawable/account" />
 
                 <EditText
@@ -56,26 +56,28 @@
                     android:background="@null"
                     android:singleLine="true"
                     android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/textForget"
                     android:hint="@string/signup_account"
                     android:textColor="@color/black"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="5dp"
+                android:layout_height="@dimen/layout_width1"
+                android:layout_marginBottom="@dimen/layout_marginBottom"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"
+                android:layout_marginTop="@dimen/layout_marginBottom"
                 android:background="@drawable/edit_bg"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_width="@dimen/layout_margin"
+                    android:layout_height="@dimen/layout_margin"
+                    android:layout_marginLeft="@dimen/layout_marginLeft"
+                    android:layout_marginRight="@dimen/layout_marginLeft"
                     android:src="@drawable/password" />
 
                 <EditText
@@ -86,26 +88,28 @@
                     android:singleLine="true"
                     android:ellipsize="end"
                     android:hint="@string/signup_password"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/textForget"
                     android:textColor="@color/black"
                     android:inputType="textPassword"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="5dp"
+                android:layout_height="@dimen/layout_width1"
+                android:layout_marginBottom="@dimen/layout_marginBottom"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"
+                android:layout_marginTop="@dimen/layout_marginBottom"
                 android:background="@drawable/edit_bg"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_width="@dimen/layout_margin"
+                    android:layout_height="@dimen/layout_margin"
+                    android:layout_marginLeft="@dimen/layout_marginLeft"
+                    android:layout_marginRight="@dimen/layout_marginLeft"
                     android:src="@drawable/password" />
 
                 <EditText
@@ -115,6 +119,8 @@
                     android:background="@null"
                     android:singleLine="true"
                     android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/textForget"
                     android:hint="@string/signup_password_again"
                     android:textColor="@color/black"
                     android:inputType="textPassword"/>
@@ -122,16 +128,16 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_height="@dimen/layout_width1"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <CheckBox
                     android:id="@+id/signup_check"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="@dimen/layout_margin"
+                    android:layout_height="@dimen/layout_margin"
                     android:checked="true"
                     android:button="@drawable/checkbox"/>
 
@@ -140,21 +146,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="#000000"
-                    android:textSize="16sp" />
+                    android:textSize="@dimen/textForget" />
             </LinearLayout>
 
             <Button
                 android:id="@+id/signup_btn"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_height="@dimen/layout_width1"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"
                 android:background="@drawable/btn_login"
                 android:text="@string/signup"
+                android:gravity="center"
                 android:textColor="@color/button"
-                android:textSize="20sp"/>
+                android:textSize="@dimen/textBtn"/>
         </LinearLayout>
 
     </LinearLayout>

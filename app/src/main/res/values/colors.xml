@@ -10,4 +10,8 @@
     <color name="textColor">#F21414</color>
     <color name="transparent">#0000</color>
     <color name="green">#7AB700</color>
+
+    <!-- 自定义Loding_Dialog_Start -->
+    <color name="bocop_dialog_bg">#77000000</color>
+    <!-- 自定义Loding_Dialog_End -->
 </resources>

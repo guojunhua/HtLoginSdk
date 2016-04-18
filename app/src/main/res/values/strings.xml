@@ -13,6 +13,9 @@
     <string name="signup">注册新账号</string>
     <string name="bind">绑定（注册为正式用户）</string>
     <string name="ACCOUNT">我同意服务条款和隐私条款</string>
+    <string name="tourist_login">快速登录</string>
+    <string name="delete_tip_title">温馨提示</string>
+    <string name="delete_tip">确认是否删除</string>
 
     <!--toast-->
     <string name="login_success_orher">登录成功,请及时绑定官方账号以保护数据安全</string>
@@ -30,6 +33,7 @@
     <string name="agreement_tip">请认真阅读并同意服务协议和隐私协议</string>
     <string name="signup_password_different">两次输入的密码不一致请重新输入</string>
     <string name="loginBack">点击登录才可以畅玩游戏</string>
+    <string name="forget_password">我们已将密码重置链接发至您的邮箱，请注意查收</string>
     
     <!--协议-->
     <string name="service_provision_name">服务条款</string>

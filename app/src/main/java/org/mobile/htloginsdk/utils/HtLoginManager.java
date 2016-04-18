@@ -12,8 +12,8 @@ import org.xutils.ex.HttpException;
 public class HtLoginManager {
     private static volatile HtLoginManager instance;
     private LoginBean loginBean;
-    private HttpException exception;
-    private String msg;
+    private Throwable exception;
+    private boolean msg;
 
     public HtLoginManager() {
     }
@@ -22,7 +22,7 @@ public class HtLoginManager {
         this.loginBean = loginBean;
     }
 
-    public HtLoginManager(HttpException exception, String msg) {
+    public HtLoginManager(Throwable ex, boolean isOnCallback) {
         this.exception = exception;
         this.msg = msg;
     }
@@ -35,19 +35,19 @@ public class HtLoginManager {
         this.loginBean = loginBean;
     }
 
-    public HttpException getException() {
+    public Throwable getException() {
         return exception;
     }
 
-    public void setException(HttpException exception) {
+    public void setException(Throwable exception) {
         this.exception = exception;
     }
 
-    public String getMsg() {
+    public boolean getMsg() {
         return msg;
     }
 
-    public void setMsg(String msg) {
+    public void setMsg(boolean msg) {
         this.msg = msg;
     }
 

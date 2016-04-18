@@ -29,6 +29,7 @@ import org.mobile.htloginsdk.bean.LoginBean;
 import org.mobile.htloginsdk.utils.Base64Utils;
 import org.mobile.htloginsdk.utils.DaoUtils;
 import org.mobile.htloginsdk.utils.HtLoginManager;
+import org.mobile.htloginsdk.utils.LoadingDialog;
 import org.mobile.htloginsdk.utils.MacAddress;
 import org.xutils.DbManager;
 import org.xutils.common.Callback;
@@ -53,6 +54,7 @@ public class SignupActivity extends Activity implements View.OnClickListener {
     private SharedPreferences sp;
     private String appId;
     private SharedPreferences.Editor edit;
+    private LoadingDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +78,8 @@ public class SignupActivity extends Activity implements View.OnClickListener {
         signup = ((Button) findViewById(R.id.signup_btn));
         signup_back.setOnClickListener(this);
         signup.setOnClickListener(this);
+        dialog = new LoadingDialog(this);
+        dialog.setCancelable(false);
         sp = getSharedPreferences("login", MODE_PRIVATE);
         if (!sp.getString("appId", "").equals("")) {
             appId = sp.getString("appId", "");
@@ -107,6 +111,7 @@ public class SignupActivity extends Activity implements View.OnClickListener {
             } else if (!signup_check.isChecked()) {
                 Toast.makeText(SignupActivity.this, R.string.agreement_tip, Toast.LENGTH_SHORT).show();
             }else {
+                dialog.show();
                 String userInfo = "username=" + username + "&password=" + password+ "&uuid=" + new MacAddress(this).getMacAddressAndroid();
                 Log.e("--hvd--", " " + userInfo);
                 data = Base64Utils.backData(userInfo);
@@ -141,12 +146,13 @@ public class SignupActivity extends Activity implements View.OnClickListener {
                         Toast.makeText(SignupActivity.this, R.string.signup_fail, Toast.LENGTH_SHORT).show();
                         Log.e("LoginErrorMassage","Code:"+loginBean.getCode()+"Massage:"+loginBean.getMsg());
                     }
+                    dialog.dismiss();
                 }
             }
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-//                loginManager.setException(error);
-//                loginManager.setMsg(msg);
+                htLoginManager.setException(ex);
+                htLoginManager.setMsg(isOnCallback);
             }
             @Override
             public void onCancelled(Callback.CancelledException cex) {

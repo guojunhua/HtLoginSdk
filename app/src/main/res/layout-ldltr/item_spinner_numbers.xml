@@ -15,8 +15,8 @@
 
     <ImageView
         android:id="@+id/id_logo"
-        android:layout_width="35dp"
-        android:layout_height="35dp" />
+        android:layout_width="@dimen/layout_hight1"
+        android:layout_height="@dimen/layout_hight1" />
 
     <TextView
         android:id="@+id/tv_number"
@@ -24,9 +24,9 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:text="asdfsadfasdf"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="@dimen/layout_marginTop"
         android:gravity="center"
-        android:textSize="20sp"
+        android:textSize="@dimen/textSize_title"
         android:textColor="@color/black" />
 
     <ImageButton

@@ -35,6 +35,7 @@ import org.mobile.htloginsdk.bean.UserLogin;
 import org.mobile.htloginsdk.utils.Base64Utils;
 import org.mobile.htloginsdk.utils.DaoUtils;
 import org.mobile.htloginsdk.utils.HtLoginManager;
+import org.mobile.htloginsdk.utils.LoadingDialog;
 import org.mobile.htloginsdk.utils.LogInStateListener;
 import org.mobile.htloginsdk.utils.LoginManager;
 import org.mobile.htloginsdk.utils.MacAddress;
@@ -70,6 +71,7 @@ public class AccountLoginActivity extends Activity implements View.OnClickListen
     private DbManager db;
     private LinearLayout linear;
     private String loginAccount;
+    private LoadingDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +95,8 @@ public class AccountLoginActivity extends Activity implements View.OnClickListen
         down.setOnClickListener(this);
         login.setOnClickListener(this);
         signup.setOnClickListener(this);
+        dialog = new LoadingDialog(this);
+        dialog.setCancelable(false);
         sp = getSharedPreferences("login", MODE_PRIVATE);
         if (!sp.getString("appId", "").equals("")) {
             appId = sp.getString("appId", "");
@@ -112,6 +116,7 @@ public class AccountLoginActivity extends Activity implements View.OnClickListen
     }
 
     private void loginAccount() {
+        dialog.show();
         db = x.getDb(((MyApp) getApplicationContext()).getDaoConfig());
         loginAccount = email.getText().toString();
         UserLogin userLogin = DaoUtils.findOne(loginAccount, db);
@@ -132,6 +137,7 @@ public class AccountLoginActivity extends Activity implements View.OnClickListen
 
     @Override
     public void OnLoginSuccess(User user, String logType) {
+        dialog.show();
         db = x.getDb(((MyApp) getApplicationContext()).getDaoConfig());
         UserLogin userLogin = DaoUtils.findOne(user.getUserId(), db);
         if (userLogin != null) {
@@ -237,13 +243,14 @@ public class AccountLoginActivity extends Activity implements View.OnClickListen
                         Toast.makeText(AccountLoginActivity.this, R.string.login_fail, Toast.LENGTH_SHORT).show();
                         Log.e("LoginErrorMassage", "Code:" + loginBean.getCode() + "Massage:" + loginBean.getMsg());
                     }
+                    dialog.dismiss();
                 }
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-//                loginManager.setException(error);
-//                loginManager.setMsg(msg);
+                htLoginManager.setException(ex);
+                htLoginManager.setMsg(isOnCallback);
             }
 
             @Override

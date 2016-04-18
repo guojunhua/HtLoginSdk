@@ -11,5 +11,5 @@ public abstract class HeTuCallback<T> {
 
     public abstract void onSuccess(T responseInfo);
 
-    public abstract void onFailure(HttpException error, String msg);
+    public abstract void onFailure(Throwable ex, boolean isOnCallback);
 }
