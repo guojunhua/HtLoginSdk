@@ -22,13 +22,13 @@
                 android:layout_height="@dimen/layout_hight1"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/layout_margin"
-                android:src="@drawable/back" />
+                android:src="@mipmap/back" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/bg"
+            android:background="@mipmap/bg"
             android:orientation="vertical">
 
             <LinearLayout
@@ -38,7 +38,7 @@
                 android:layout_marginLeft="@dimen/layout_margin"
                 android:layout_marginRight="@dimen/layout_margin"
                 android:layout_marginTop="@dimen/layout_marginLeft"
-                android:background="@drawable/edit_bg"
+                android:background="@mipmap/edit_bg"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -47,7 +47,7 @@
                     android:layout_height="@dimen/layout_margin"
                     android:layout_marginLeft="@dimen/layout_marginLeft"
                     android:layout_marginRight="@dimen/layout_marginLeft"
-                    android:src="@drawable/account" />
+                    android:src="@mipmap/account" />
 
                 <EditText
                     android:id="@+id/bind_edit_account"
@@ -69,7 +69,7 @@
                 android:layout_marginLeft="@dimen/layout_margin"
                 android:layout_marginRight="@dimen/layout_margin"
                 android:layout_marginTop="@dimen/layout_marginTop"
-                android:background="@drawable/edit_bg"
+                android:background="@mipmap/edit_bg"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -78,7 +78,7 @@
                     android:layout_height="@dimen/layout_margin"
                     android:layout_marginLeft="@dimen/layout_marginLeft"
                     android:layout_marginRight="@dimen/layout_marginLeft"
-                    android:src="@drawable/password" />
+                    android:src="@mipmap/password" />
 
                 <EditText
                     android:id="@+id/bind_edit_password"
@@ -101,7 +101,7 @@
                 android:layout_marginLeft="@dimen/layout_margin"
                 android:layout_marginRight="@dimen/layout_margin"
                 android:layout_marginTop="@dimen/layout_marginTop"
-                android:background="@drawable/edit_bg"
+                android:background="@mipmap/edit_bg"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -110,7 +110,7 @@
                     android:layout_height="@dimen/layout_margin"
                     android:layout_marginLeft="@dimen/layout_marginLeft"
                     android:layout_marginRight="@dimen/layout_marginLeft"
-                    android:src="@drawable/password" />
+                    android:src="@mipmap/password" />
 
                 <EditText
                     android:id="@+id/bind_edit_password_again"
@@ -132,7 +132,7 @@
                 android:layout_marginLeft="@dimen/layout_margin"
                 android:layout_marginRight="@dimen/layout_margin"
                 android:layout_marginTop="@dimen/layout_marginTop"
-                android:background="@drawable/btn_login"
+                android:background="@mipmap/btn_bg1"
                 android:text="@string/bind"
                 android:gravity="center"
                 android:textColor="@color/button"

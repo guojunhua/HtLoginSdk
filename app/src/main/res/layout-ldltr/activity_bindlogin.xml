@@ -13,7 +13,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/bg"
+            android:background="@mipmap/bg"
             android:orientation="vertical">
 
             <LinearLayout
@@ -23,7 +23,7 @@
                 android:layout_marginLeft="@dimen/layout_margin"
                 android:layout_marginRight="@dimen/layout_margin"
                 android:layout_marginTop="@dimen/layout_margin"
-                android:background="@drawable/edit_bg"
+                android:background="@mipmap/edit_bg"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -33,7 +33,7 @@
                     android:layout_height="@dimen/layout_margin"
                     android:layout_marginLeft="@dimen/layout_marginBottom"
                     android:layout_weight="1"
-                    android:src="@drawable/facebook_logo" />
+                    android:src="@mipmap/facebook_logo" />
 
                 <TextView
                     android:id="@+id/bindlogin_account"
@@ -51,7 +51,7 @@
                     android:layout_height="@dimen/layout_margin"
                     android:layout_marginRight="@dimen/layout_marginBottom"
                     android:layout_weight="1"
-                    android:src="@drawable/more" />
+                    android:src="@mipmap/down" />
             </LinearLayout>
 
 
@@ -62,7 +62,7 @@
                 android:layout_marginLeft="@dimen/layout_margin"
                 android:layout_marginRight="@dimen/layout_margin"
                 android:layout_marginTop="@dimen/layout_marginLeft"
-                android:background="@drawable/btn_white"
+                android:background="@mipmap/btn_bg2"
                 android:text="@string/login"
                 android:gravity="center"
                 android:textColor="@color/black"
@@ -75,7 +75,7 @@
                 android:layout_marginLeft="@dimen/layout_margin"
                 android:layout_marginRight="@dimen/layout_margin"
                 android:layout_marginTop="@dimen/layout_marginLeft"
-                android:background="@drawable/btn_login"
+                android:background="@mipmap/btn_bg1"
                 android:text="@string/bind"
                 android:gravity="center"
                 android:textColor="@color/button"
@@ -89,7 +89,7 @@
                 android:layout_marginLeft="@dimen/layout_margin"
                 android:layout_marginRight="@dimen/layout_margin"
                 android:layout_marginTop="@dimen/layout_marginLeft"
-                android:background="@drawable/facebook" />
+                android:background="@mipmap/facebook_btn" />
 
         </LinearLayout>
     </LinearLayout>

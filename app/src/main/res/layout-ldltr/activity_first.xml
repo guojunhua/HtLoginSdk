@@ -8,7 +8,7 @@
     <Button
         android:layout_width="100dp"
         android:layout_height="50dp"
-        android:background="@drawable/btn_login"
+        android:background="@mipmap/btn_bg1"
         android:text="登录"
         android:onClick="onClick"
         android:gravity="center"

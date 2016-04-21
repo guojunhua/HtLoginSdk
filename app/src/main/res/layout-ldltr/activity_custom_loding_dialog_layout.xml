@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/dialog_bocop_loading_rotate_anim_img" />
+                android:background="@drawable/loading" />
         </RelativeLayout>
 
         <RelativeLayout

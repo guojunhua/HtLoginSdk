@@ -8,6 +8,7 @@
     android:paddingBottom="5dip"
     android:paddingLeft="20dip"
     android:paddingRight="20dip"
+    android:gravity="center_vertical"
     android:paddingTop="5dip">
 
     <!--           设置子布局以块的形式占据焦点, 不可以抢占父的焦点 -->
@@ -26,13 +27,13 @@
         android:text="asdfsadfasdf"
         android:layout_marginLeft="@dimen/layout_marginTop"
         android:gravity="center"
-        android:textSize="@dimen/textSize_title"
+        android:textSize="@dimen/textBtn"
         android:textColor="@color/black" />
 
     <ImageButton
         android:id="@+id/ib_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/delete" />
+        android:background="@mipmap/delete" />
 
 </LinearLayout>

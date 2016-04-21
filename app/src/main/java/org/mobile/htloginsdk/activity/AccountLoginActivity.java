@@ -79,7 +79,7 @@ public class AccountLoginActivity extends Activity implements View.OnClickListen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_accountlogin);
         initView();
-        logo.setImageResource(R.drawable.account);
+        logo.setImageResource(R.mipmap.account);
         email.setText(sp.getString("username", ""));
         login();
     }
@@ -300,7 +300,7 @@ public class AccountLoginActivity extends Activity implements View.OnClickListen
             } else {
                 mHolder.logo.setVisibility(View.VISIBLE);
                 mHolder.ibDelete.setVisibility(View.VISIBLE);
-                mHolder.logo.setImageResource(R.drawable.account);
+                mHolder.logo.setImageResource(R.mipmap.account);
                 mHolder.tvNumber.setText(numbers.get(position));
                 mHolder.ibDelete.setTag(position);
                 mHolder.ibDelete.setOnClickListener(new View.OnClickListener() {
@@ -318,6 +318,7 @@ public class AccountLoginActivity extends Activity implements View.OnClickListen
                                 datas = DaoUtils.init(db);
                                 if ((datas.size()-1) == 0) {
                                     startActivity(new Intent(AccountLoginActivity.this, MainActivity.class));
+                                    email.setText("");
                                     popupWindow.dismiss();
                                     finish();
                                 }

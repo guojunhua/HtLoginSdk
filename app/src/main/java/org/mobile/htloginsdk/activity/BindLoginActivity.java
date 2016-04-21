@@ -85,10 +85,10 @@ public class BindLoginActivity extends Activity implements View.OnClickListener,
         setContentView(R.layout.activity_bindlogin);
         initView();
         if (sp.getInt("loginStats", 0) == 1) {
-            logo.setImageResource(R.drawable.tourst);
+            logo.setImageResource(R.mipmap.tourist_logo);
             account.setText(sp.getString("username", ""));
         } else if (sp.getInt("loginStats", 0) == 3) {
-            logo.setImageResource(R.drawable.facebook_logo);
+            logo.setImageResource(R.mipmap.facebook_logo);
             account.setText(sp.getString("username", ""));
         }
         login();
@@ -315,9 +315,9 @@ public class BindLoginActivity extends Activity implements View.OnClickListener,
                 db = x.getDb(((MyApp) getApplicationContext()).getDaoConfig());
                 int type = DaoUtils.findOne(numbers.get(position),db).getLoginStats();
                 if (type==1){
-                    mHolder.logo.setImageResource(R.drawable.tourst);
+                    mHolder.logo.setImageResource(R.mipmap.tourist_logo);
                 }else if (type==3){
-                    mHolder.logo.setImageResource(R.drawable.facebook_logo);
+                    mHolder.logo.setImageResource(R.mipmap.facebook_logo);
                 }
                 mHolder.tvNumber.setText(numbers.get(position));
                 mHolder.ibDelete.setTag(position);
@@ -337,6 +337,7 @@ public class BindLoginActivity extends Activity implements View.OnClickListener,
                                 datas = DaoUtils.init(db);
                                 if ((datas.size()-1) == 0) {
                                     startActivity(new Intent(BindLoginActivity.this, MainActivity.class));
+                                    account.setText("");
                                     popupWindow.dismiss();
                                     finish();
                                 }
